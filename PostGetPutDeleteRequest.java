@@ -59,7 +59,7 @@ public class PostGetPutDeleteRequest {
 	// HTTP POST request
 	private void sendPost() throws Exception {
 
-		String url = "https://selfsolve.apple.com/wcResults.do";
+		String url = "http://www.google.com";
 		URL obj = new URL(url);
 		HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
 
