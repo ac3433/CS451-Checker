@@ -1,58 +1,717 @@
 /**
- * Created by kashyap1 on 3/9/17.
+ * Created by zoltangercsak1 on 3/9/17.
  */
-function mandatoryCapture(board, playerTurn) {
-    var moves = [];
 
-    for(var i = 0; i < board.length; i++){ // nested forloop for moving to each square of the board
-        var temp_board = board[i];
+// move validations
 
-        for(var j = 0; j < board.length; j++){
-            var piece = board[i][j];
-            if(piece.player == playerTurn){ // checks if the piece on the board belongs to the player making the move.
-                if(piece.type == "king"){
-                    var temp = [];      // stores all the mandatory capture moves on the board for the player(playerturn) 
-                    if((i+2 < 8  && j+2 < 8) && (i-2 >= 0 && j-2 >= 0)){ // checks to see if the board is out of bounds
-                        var xAxis = i+1;
-                        var yAxis = j+1;
-                        var back_xAxis = i-1;
-                        var back_yAxis = j-1;
-                        
-                        //checks to see if the next diagonal space forward/backward is a checker piece of the opponent. 
-                        if((board[xAxis][yAxis].player !=  playerTurn) || (board[back_xAxis][back_yAxis].player !=  playerTurn)){
-                            if(board[xAxis+1][yAxis+1]== 0){ // checks to see if two diagonal spaces forward is an empty space (0)
-                                temp.add(xAxis+1); // this is a tuple array since JS doesnt have tuples.
-                                temp.add(yAxis+1); // this is a tuple array since JS doesnt have tuples. 
-                                moves.add(temp); // adds this tuple to the mandatory capture array of tuples. 
-                            }
-                             
-                            else if (board[back_xAxis-1][back_yAxis-1]== 0){// checks to see if two diagonal spaces backward is an empty space (0)
-                                temp.add(back_xAxis-1);
-                                temp.add(back_yAxis-1);
-                                moves.add(temp);
+// function test(){
+//     var gameBoard = [
+//         [  0,  1,  0,  1,  0,  1,  0,  1 ],
+//         [  1,  0,  1,  0,  1,  0,  1,  0 ],
+//         [  0,  1,  0,  1,  0,  1,  0,  1 ],
+//         [  0,  0,  0,  0,  0,  0,  0,  0 ],
+//         [  0,  0,  0,  0,  0,  0,  0,  0 ],
+//         [  2,  0,  2,  0,  2,  0,  2,  0 ],
+//         [  0,  2,  0,  2,  0,  2,  0,  2 ],
+//         [  2,  0,  2,  0,  2,  0,  2,  0 ]
+//     ];
+//
+//     for(i=0; i < gameBoard.length; i++)
+//     {
+//         var word = "";
+//         var k = gameBoard[i];
+//         for (j = 0; j < gameBoard.length; j++){
+//             word += (gameBoard[i][j] + " ");
+//         }
+//         console.log(word);
+//
+//     }
+
+
+    function mandatoryCapture(board, playerTurn) {
+        var moves = [];
+
+        for (var i = 0; i < board.length; i++) {
+            var temp_board = board[i];
+
+            for (var j = 0; j < board.length; j++) {
+                var piece = board[i][j];
+                if (piece.player == playerTurn) {
+                    var temp = [];
+                    if (i + 2 < 8 && j + 2 < 8) {
+                        var xAxis = i + 1;
+                        var yAxis = j + 1;
+                        if ((board[xAxis][yAxis]).player != playerTurn && board[xAxis][yAxis] != 0) {
+                            if (board[xAxis + 1][yAxis + 1] == 0) { // this is assuming the empty spaces are integers like 0
+                                temp.push(xAxis + 1);
+                                temp.push(yAxis + 1);
+                                moves.push(temp);
                             }
                         }
-
-
                     }
                 }
-                else{ // this is for a non king type piece that uses the same algorithm as the one above but just checks for forward movement.
+                else if( piece == 3){
                     var temp = [];
-                    if(i+2 < 8  && j+2 < 8){
-                        var xAxis = i+1;
-                        var yAxis = j+1;
-                        if(board[xAxis][yAxis].player !=  playerTurn){
-                            if(board[xAxis+1][yAxis+1]== 0){ // this is assuming the empty spaces are integers like 0
-                                temp.add(xAxis+1);
-                                temp.add(yAxis+1);
-                                moves.add(temp);
+                    if (i + 2 < 8 && j + 2 < 8) {
+                        var xAxis = i + 1;
+                        var yAxis = j + 1;
+                        if ((board[xAxis][yAxis]).player != playerTurn && board[xAxis][yAxis] != 0) {
+                            if (board[xAxis + 1][yAxis + 1] == 0) { // this is assuming the empty spaces are integers like 0
+                                temp.push(xAxis + 1);
+                                temp.push(yAxis + 1);
+                                moves.push(temp);
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+        return moves;
+    }
+
+    function mandatoryCapturePlayer2(board, playerTurn) {
+        var moves = [];
+
+        for (var i = board.length - 1 ; i >= 0; i--) {
+            var temp_board = board[i];
+
+            for (var j = 0; j < board.length; j++) {
+                var piece = board[i][j];
+                if (piece.player == playerTurn) {
+                    var temp = [];
+                    if (i - 2 >= 0 && j + 2 < 8) {
+                        var xAxis = i - 1;
+                        var yAxis = j + 1;
+                        if ((board[xAxis][yAxis]).player != playerTurn && board[xAxis][yAxis] != 0) {
+                            if (board[xAxis - 1][yAxis + 1] == 0) { // this is assuming the empty spaces are integers like 0
+                                temp.push(xAxis - 1);
+                                temp.push(yAxis + 1);
+                                moves.push(temp);
+                            }
+                        }
+                    }
+                }
+                else if(piece == 4){
+                    var temp = [];
+                    if (i - 2 >= 0 && j + 2 < 8) {
+                        var xAxis = i - 1;
+                        var yAxis = j + 1;
+                        if ((board[xAxis][yAxis]).player != playerTurn && board[xAxis][yAxis] != 0 ) {
+                            if (board[xAxis - 1][yAxis + 1] == 0) { // this is assuming the empty spaces are integers like 0
+                                temp.push(xAxis - 1);
+                                temp.push(yAxis + 1);
+                                moves.push(temp);
+                            }
+                        }
+                    }
+                }
+
+
+            }
+        }
+        return moves;
+    }
+
+    function multipleCaptureForward(board, playerTurn) {
+        var moves = []; // contains all the multiple capture moves.
+
+        for (var i = 0; i < board.length; i++) { //nested for loop to navigate to each box in a board
+            var temp_board = board[i];
+
+            for (var j = 0; j < board.length; j++) {
+                var piece = board[i][j]; // gets each checker piece or an empty space.
+                //console.log("piece here" + piece);
+                if (piece.player == playerTurn) {
+                    var temp = [];
+                    while(i+2 < 8 && j+2 < 8) {
+                        var xAxis = i + 1;
+                        var yAxis = j + 1;
+                        if ((board[xAxis][yAxis]).player != playerTurn ) {
+                            if (board[xAxis + 1][yAxis + 1] == 0) {
+                                //i+2;
+                                //j+2;
+                                i = xAxis + 1;
+                                j = yAxis + 1;
+                                temp.push(i);
+                                temp.push(j);
+                            }
+                            else {
+                                break;
+                            }
+                        }
+                    }
+                    if (temp.length > 2) {
+                        moves.push(temp);
+                    }  // see if the checker piece is one of the player. Note: check for empty space
+                }
+                else if(piece == 3){
+                    var temp = [];
+                    while(i+2 < 8 && j+2 < 8) {
+                        var xAxis = i + 1;
+                        var yAxis = j + 1;
+                        if ((board[xAxis][yAxis]).player != playerTurn ) {
+                            if (board[xAxis + 1][yAxis + 1] == 0) {
+                                //i+2;
+                                //j+2;
+                                i = xAxis + 1;
+                                j = yAxis + 1;
+                                temp.push(i);
+                                temp.push(j);
+                            }
+                            else {
+                                break;
+                            }
+                        }
+                    }
+                    if (temp.length > 2) {
+                        moves.push(temp);
+                    }  // see if the checker piece is one of the player. Note: check for empty space
+
+                }
+                //console.log(i,j);
+            }
+        }
+
+        var length = moves.length;
+        var returnArray = [];
+
+        returnArray.push(moves[length - 2]);
+        returnArray.push(moves[length - 1]);
+
+        return returnArray; // return only last position where the piece should be
+    }
+
+    function multipleCaptureBackward(board, playerTurn) {
+        var moves = []; // contains all the multiple capture moves.
+
+        for (var i = 7; i >= 0; i--) { //nested for loop to navigate to each box in a board
+            var temp_board = board[i];
+
+            for (var j = 0; j < board.length; j++) {
+                var piece = board[i][j]; // gets each checker piece or an empty space.
+                //console.log("piece here" + piece);
+                if (piece.player == playerTurn) {
+                    var temp = [];
+                    while(i-2 >= 0 && j+2 < 8) {
+                        var xAxis = i - 1;
+                        var yAxis = j + 1;
+                        if ((board[xAxis][yAxis]).player != playerTurn ) {
+                            if (board[xAxis - 1][yAxis + 1] == 0) {
+                                //i+2;
+                                //j+2;
+                                i = xAxis - 1;
+                                j = yAxis + 1;
+                                temp.push(i);
+                                temp.push(j);
+                            }
+                            else {
+                                break;
+                            }
+                        }
+                    }
+                    if (temp.length > 2) {
+                        moves.push(temp);
+                    }  // see if the checker piece is one of the player. Note: check for empty space
+                }
+                else if(piece == 3){
+                    var temp = [];
+                    while(i-2 >= 0 && j+2 < 8) {
+                        var xAxis = i - 1;
+                        var yAxis = j + 1;
+                        if ((board[xAxis][yAxis]).player != playerTurn) {
+                            if (board[xAxis - 1][yAxis + 1] == 0) {
+                                //i+2;
+                                //j+2;
+                                i = xAxis - 1;
+                                j = yAxis + 1;
+                                temp.push(i);
+                                temp.push(j);
+                            }
+                            else {
+                                break;
+                            }
+                        }
+                    }
+                    if (temp.length > 2) {
+                        moves.push(temp);
+                    }  // see if the checker piece is one of the player. Note: check for empty space
+
+                }
+                //console.log(i,j);
+            }
+        }
+
+        var length = moves.length;
+        var returnArray = [];
+
+        returnArray.push(moves[length - 2]);
+        returnArray.push(moves[length - 1]);
+
+        return returnArray; // return only last position where the piece should be
+    }
+
+
+    function mandatoryCaptureKing(board,playerturn){
+        var moves = [];
+        var temp_b =[];
+        var temp_f =[];
+        if(playerturn == 1){
+            for (var i = 0 ; i < board.length; i++){
+                var temp_board = board[i];
+
+                for (var j = 0; j < board.length; j++){
+                    var piece = board[i][j];
+                    if (piece == 3){
+                        temp_b = mandatoryCapture(board,playerturn);
+                        temp_f = mandatoryCapturePlayer2(board,playerturn);
+                    }
+                }
+                for(var x = 0; x < temp_b.length; x ++){
+                    moves.push(temp_b[x]);
+                }
+                for(var y = 0; y < temp_f.length; y ++){
+                    moves.push(temp_f[y]);
+                }
+            }
+        }
+        else if(playerturn == 2){
+            for (var i = 7 ; i >= 0; i--){
+                var temp_board = board[i];
+
+                for (var j = 0; j < board.length; j++){
+                    var piece = board[i][j];
+                    if (piece == 4){
+                        temp_b = mandatoryCapture(board,playerturn);
+                        temp_f = mandatoryCapturePlayer2(board,playerturn);
+                    }
+                }
+                for(var x = 0; x < temp_b.length; x ++){
+                    moves.push(temp_b[x]);
+                }
+                for(var y = 0; y < temp_f.length; y ++){
+                    moves.push(temp_f[y]);
+                }
+            }
+        }
+
+        return moves;
+
+    }
+
+
+    function multipleCaptureKing(board,playerturn){
+        var moves = [];
+        var temp_b =[];
+        var temp_f =[];
+        if(playerturn == 1){
+            for (var i = 0 ; i < board.length; i++){
+                var temp_board = board[i];
+
+                for (var j = 0; j < board.length; j++){
+                    var piece = board[i][j];
+                    if (piece == 3){
+                        temp_b = multipleCaptureBackward(board,playerturn);
+                        temp_f = multipleCaptureForward(board,playerturn);
+                    }
+                }
+                for(var x = 0; x < temp_b.length; x ++){
+                    moves.push(temp_b[x]);
+                }
+                for(var y = 0; y < temp_f.length; y ++){
+                    moves.push(temp_f[y]);
+                }
+            }
+        }
+
+        else if(playerturn == 2){
+            for (var i = 7 ; i >= 0; i--){
+                var temp_board = board[i];
+
+                for (var j = 0; j < board.length; j++){
+                    var piece = board[i][j];
+                    if (piece == 3){
+                        temp_b = multipleCaptureBackward(board,playerturn);
+                        temp_f = multipleCaptureForward(board,playerturn);
+                    }
+                }
+                for(var x = 0; x < temp_b.length; x ++){
+                    moves.push(temp_b[x]);
+                }
+                for(var y = 0; y < temp_f.length; y ++){
+                    moves.push(temp_f[y]);
+                }
+            }
+        }
+
+        var length = moves.length;
+        var returnArray = [];
+
+        returnArray.push(moves[length - 2]);
+        returnArray.push(moves[length - 1]);
+
+        return returnArray;
+
+    }
+
+
+    function kinging(board, playerTurn){
+
+        if(playerTurn == 1) {
+            var position = [[7,0], [7,1], [7,2],[7,3],[7,4],[7,5],[7,6],[7,7]];
+            for (var i = 0; i < board.length; i++) { //nested for loop to navigate to each box in a board
+                var temp_board = board[i];
+
+                for (var j = 0; j < board.length; j++) {
+                    var piece = board[i][j]; // gets each checker piece or an empty space.
+
+                    if (piece == 1) {
+                        for (var k = 0; k < position.length; k++) {
+
+                            if ((position[k][0] == i ) && (position[k][1] == j )) {
+                                piece == 3;
+                                window.alert("Piece became a King");
+                            }
+                        }
+                    }
+
+
+                }
+            }
+        }
+        else if(playerTurn == 2){
+            var position = [[0,7], [0,6], [0,5],[0,4],[0,3],[0,2],[0,1],[0,0]];
+            for (var i = 7; i >= 0; i--) { //nested for loop to navigate to each box in a board
+                var temp_board = board[i];
+
+                for (var j = 0; j < board.length; j++) {
+                    var piece = board[i][j]; // gets each checker piece or an empty space.
+
+                    if (piece == 2) {
+                        for (var k = 0; k < position.length; k++) {
+
+                            if ((position[k][0] == i ) && (position[k][1] == j )) {
+                                piece == 4;
+                                window.alert("Piece became a King");
                             }
                         }
                     }
                 }
             }
+
         }
 
     }
-    return moves;
-}
+
+
+    function winningCheckKingsforward(board,playerTurn){
+        var result = true;
+        if(playerTurn == 1) {
+            // check board for the pieces of player 2
+            for (var i = 7; i >= 0; i--) { //nested for loop to navigate to each box in a board
+                var temp_board = board[i];
+
+                for (var j = 0; j < board.length; j++) {
+                    var piece = board[i][j]; // gets each checker piece or an empty space.
+                    // console.log(piece);
+                    if (piece == 4){ // check if other player still has a piece
+                        var xAxis = i - 1;
+                        var yAxis = j + 1;
+                        if(board[xAxis] [yAxis] == 1){
+                            if(board[xAxis -1] [yAxis + 1] == 0){
+                                result = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                break;
+            }
+
+            return result;
+        }
+
+        else if(playerTurn == 2) {
+
+            // check board for the pieces of player 2
+            for (var i = 0; i< board.length; i++) { //nested for loop to navigate to each box in a board
+                var temp_board = board[i];
+
+                for (var j = 0; j < board.length; j++) {
+                    var piece = board[i][j]; // gets each checker piece or an empty space.
+                    if (piece == 3){ // check if other player still has a piece
+                        var xAxis = i + 1;
+                        var yAxis = j + 1;
+                        if(board[xAxis] [yAxis] == 2){
+                            if(board[xAxis + 1] [yAxis + 1] == 0){
+                                result = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                break;
+            }
+
+        }
+        return result;
+
+    }
+
+    function winningCheckKingsbackward(board,playerTurn){
+        var result = true;
+        if(playerTurn == 2) {
+            // check board for the pieces of player 2
+            for (var i = 7; i >= 0; i--) { //nested for loop to navigate to each box in a board
+                var temp_board = board[i];
+
+                for (var j = 0; j < board.length; j++) {
+                    var piece = board[i][j]; // gets each checker piece or an empty space.
+                    // console.log(piece);
+                    if (piece == 3){ // check if other player still has a piece
+                        var xAxis = i - 1;
+                        var yAxis = j + 1;
+                        if(board[xAxis] [yAxis] == 2){
+                            if(board[xAxis -1] [yAxis + 1] == 0){
+                                result = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                break;
+            }
+
+            return result;
+        }
+
+        else if(playerTurn == 1) {
+
+            // check board for the pieces of player 2
+            for (var i = 0; i< board.length; i++) { //nested for loop to navigate to each box in a board
+                var temp_board = board[i];
+
+                for (var j = 0; j < board.length; j++) {
+                    var piece = board[i][j]; // gets each checker piece or an empty space.
+                    if (piece == 4){ // check if other player still has a piece
+                        var xAxis = i + 1;
+                        var yAxis = j + 1;
+                        if(board[xAxis] [yAxis] == 1){
+                            if(board[xAxis + 1] [yAxis + 1] == 0){
+                                result = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                break;
+            }
+        }
+        return result;
+
+    }
+
+    function winningCheckforKings(board, playerTurn){
+        var result = true;
+        if(playerTurn == 1){
+            var forward = winningCheckKingsforward(board, 1);
+            var backward = winningCheckKingsforward(board, 1);
+
+            if(forward == true && backward == true){
+                result = true;
+            }
+            else{
+                result = false
+            }
+        }
+        if(playerTurn == 2){
+            var forward = winningCheckKingsforward(board, 2);
+            var backward = winningCheckKingsforward(board, 2);
+
+            if(forward == true && backward == true){
+                result = true;
+            }
+            else{
+                result = false
+            }
+        }
+        return result;
+    }
+
+    function winningCheckForBlocks(board, playerTurn){ // implement for king
+        var result = true;
+        if(playerTurn == 1) {
+            // check board for the pieces of player 2
+            for (var i = 7; i >= 0; i--) { //nested for loop to navigate to each box in a board
+                var temp_board = board[i];
+
+                for (var j = 0; j < board.length; j++) {
+                    var piece = board[i][j]; // gets each checker piece or an empty space.
+                    // console.log(piece);
+                    if (piece == 2){ // check if other player still has a piece
+                        var xAxis = i - 1;
+                        var yAxis = j + 1;
+                        if(board[xAxis] [yAxis] == 1){
+                            if(board[xAxis -1] [yAxis + 1] == 0){
+                                result = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                break;
+            }
+            if(result == true){
+                console.log("Player 1 has won the game by blocking all of player 2's pieces");
+            }
+            return result;
+        }
+
+        else if(playerTurn == 2) {
+
+            // check board for the pieces of player 2
+            for (var i = 0; i< board.length; i++) { //nested for loop to navigate to each box in a board
+                var temp_board = board[i];
+
+                for (var j = 0; j < board.length; j++) {
+                    var piece = board[i][j]; // gets each checker piece or an empty space.
+                    if (piece == 1){ // check if other player still has a piece
+                        var xAxis = i + 1;
+                        var yAxis = j + 1;
+                        if(board[xAxis] [yAxis] == 2){
+                            if(board[xAxis + 1] [yAxis + 1] == 0){
+                                result = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                break;
+            }
+            if (result == true) {
+                console.log("Player 2 has won the game by blocking all of player 1's pieces");
+            }
+        }
+        return result;
+    }
+
+    function winCheckByCapture(board, playerTurn){
+        var result = true;
+        if(playerTurn == 2){
+            for (var i = 7; i >= 0; i--) { //nested for loop to navigate to each box in a board
+                var temp_board = board[i];
+
+                for (var j = 0; j < board.length; j++) {
+                    var piece = board[i][j];
+                    if(piece == 1){
+                        result = false;
+                        break;
+                    }
+                }
+                break;
+            }
+            if(result == true){
+                console.log("PlAYER 2 HAS WON THE GAME BY CAPTURING ALL OF PLAYER 1'S PIECES.")
+            }
+            return result;
+        }
+
+        if(playerTurn == 1){
+            for (var i = 0; i < board.length; i++) { //nested for loop to navigate to each box in a board
+                var temp_board = board[i];
+
+                for (var j = 0; j < board.length; j++) {
+                    var piece = board[i][j];
+                    if(piece == 2){
+                        result = false;
+                        break;
+                    }
+                }
+                break;
+            }
+            if(result == true){
+                console.log("PlAYER 1 HAS WON THE GAME BY CAPTURING ALL OF PLAYER 2'S PIECES.")
+            }
+            return result;
+        }
+    }
+
+    function validateMovement(piece, move, board){
+       var xAxis = move[0];
+       var yAxis = move[1];
+       var validate = true;
+       var reason;
+
+       if(board[xAxis][yAxis] == -1){  // make sure the non white spaces are -1 .
+           console.log("You can only move diagonally")
+           return false;
+       }
+
+       var wincapture = winCheckByCapture(board, piece.player);
+
+       var winblock = winningCheckForBlocks(board, piece.player);
+
+       var winKing = winningCheckforKings(board, piece.player);
+
+       var mandatoryCapture;
+       var multipleCapture;
+
+       if (wincapture == false || (winblock == false && winKing == false)){
+           if(piece.player == 1){
+               mandatoryCapture = mandatoryCapture(board, piece.player);
+               multipleCapture = multipleCaptureForward(board, piece.player);
+           }
+           else{
+               mandatoryCapture = mandatoryCapturePlayer2(board, piece.player);
+               multipleCapture = multipleCaptureBackward(board, piece.player);
+           }
+
+           var multipleCaptureKing = multipleCaptureKing(board, piece.player);
+
+           var kinging = kinging(board, piece.player);
+
+
+           for(var i = 0; i< mandatoryCapture.length ; i++){
+               var temp = mandatoryCapture[i];
+               if(temp[0] ==  xAxis && temp[1] == yAxis){
+                   validate = true;
+                   break;
+               }
+               else {
+                   validate = false;
+                   reason = "There is a mandatory capture that should be made";
+               }
+           }
+
+           //check multiple capture
+           if(xAxis == multipleCapture[0] && yAxis == multipleCapture[1]){
+               validate = true;
+           }
+           else{
+               validate = false;
+               reason = "A multiple capture can be made";
+           }
+
+           //check multiple capture for king
+           if(xAxis == multipleCaptureKing[0] && yAxis == multipleCaptureKing[1]){
+               validate = true;
+           }
+           else{
+               validate = false;
+               reason = "A multiple capture can be made";
+           }
+
+           var returnArray = [];
+
+           returnArray.push(validate);
+           returnArray.push(reason);
+
+           return returnArray;
+
+
+       }
+
+
+    }
+
+// }
