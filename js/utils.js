@@ -12,10 +12,8 @@ function initJson(){
 
     var data = {};
     data.board = gameBoard;
-    data.currentPlayer = localStorage.getItem("playername");
+    data.currentPlayer = 0;
     data.players = [localStorage.getItem("playername")];
-   
-   
     data.win = false;
     return data;
 }
