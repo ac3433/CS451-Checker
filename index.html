@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Checkers!</title>
+	<!-- <script src="https://www.gstatic.com/firebasejs/3.7.1/firebase-database.js"></script> -->
+	<script src="https://www.gstatic.com/firebasejs/3.7.1/firebase.js"></script>
+	<script src="js/utils.js"></script>
+<script>
+  var config = {
+    apiKey: "AIzaSyDMPRg760qLZsPv7vyXW41BXHSTffciP7k",
+    databaseURL: "https://cs-451.firebaseio.com",
+  };
+  var sessionName = "test"
+  var App = firebase.initializeApp(config);
+  var session = null
+  console.log(App.name);  // "[DEFAULT]"
+  var defaultDatabase = App.database();
+  var sessionRef = firebase.database().ref('/sessions/'+sessionName);
+  sessionRef.on('value', function(snapshot) {
+  			session = snapshot.val()
+			if (session == null){
+				console.log("first player")
+				data = initJson()
+				var updates = {};
+				updates['/sessions/'+sessionName] = data;
+				res = firebase.database().ref().update(updates);
+				console.log(res)
+
+			}else if (session.players.length ==1 && 
+				session.players[0] == getName()){
+				console.log("waiting for player 2")
+			}
+			else if (session.players.length >1){
+				console.log("REDIRECT TO GAME")
+			}
+			else{
+				console.log("cant match "+session.players[0])
+				// Handle redirection to main game here
+				// NOTE PLAYER 2 has firebase index == 1
+				// NOTE PLAYER 1 has firebase index == 0	
+				console.log("Player 2")			
+				// updates[] = ;
+				session.players.push(getName())
+				res = firebase.database()
+							.ref('/sessions/'+sessionName+"/players")
+							.set(session.players)
+			}
+ 		
+	});
+
+
+  function exit(){
+  	// sessionRef.remove()
+  	// HANDLE just one player being present
+  	console.log("deleted")	
+  }
+</script>
+</head>
+<body onbeforeunload="exit()">
+
+</body>
+</html>

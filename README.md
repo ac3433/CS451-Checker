@@ -39,3 +39,11 @@ Web API Key:  AIzaSyDMPRg760qLZsPv7vyXW41BXHSTffciP7k
 url: https://console.firebase.google.com/project/cs-451
 
 ```
+
+## Dependencies:-
+ - Firebase account
+ - Materializecss (materializecss.com)
+ - We will follow google's javascript guidelines. Use the following to lint your code before commiting
+  https://developers.google.com/closure/utilities/
+
+
