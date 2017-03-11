@@ -6,7 +6,7 @@
 
 function test(){
     var gameBoard = [
-        [  0,  1,  0,  1,  0,  1,  0,  1 ],
+        [  0,  1,  0,  1,  2,  1,  0,  1 ],
         [  1,  0,  1,  0,  1,  0,  0,  0 ],
         [  0,  1,  0,  1,  0,  2,  0,  1 ],
         [  0,  0,  0,  0,  0,  0,  0,  0 ],
@@ -259,14 +259,14 @@ function test(){
     //
     // }
 
-    var y = multipleCaptureKing(gameBoard, 1);
-    console.log("Multiple capture King results--------------");
-    for(i = 0; i < y.length; i++){
-        var board = y[i];
-
-        console.log(y[i].toString());
-
-    }
+    // var y = multipleCaptureKing(gameBoard, 1);
+    // console.log("Multiple capture King results--------------");
+    // for(i = 0; i < y.length; i++){
+    //     var board = y[i];
+    //
+    //     console.log(y[i].toString());
+    //
+    // }
 
     function mandatoryCaptureKing(board,playerturn){
         var moves = [];
@@ -352,11 +352,32 @@ function test(){
                 }
             }
         }
+        else if(playerTurn == 2){
+            var position = [[0,7], [0,6], [0,5],[0,4],[0,3],[0,2],[0,1],[0,0]];
+            for (var i = 7; i >= 0; i--) { //nested for loop to navigate to each box in a board
+                var temp_board = board[i];
+
+                for (var j = 0; j < board.length; j++) {
+                    var piece = board[i][j]; // gets each checker piece or an empty space.
+
+                    if (piece == 2) {
+                        for (var k = 0; k < position.length; k++) {
+
+                            if ((position[k][0] == i ) && (position[k][1] == j )) {
+                                piece == 4;
+                                console.log("Piece became a King");
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
 
     }
 
     console.log("Kinging results-------------");
-    var x = kinging(gameBoard, 1);
+    var x = kinging(gameBoard, 2);
 
     // for(i = 0; i < x.length; i++){
     //     var board = x[i];
