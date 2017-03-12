@@ -6,6 +6,7 @@ var FirebaseHandler = function (){
   };
 
   // A sample checkers room
+
   this.sessionName = "hello2"
   this.App = firebase.initializeApp(config);
   this.session = null

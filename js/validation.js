@@ -668,7 +668,7 @@
 
            var multipleCaptureKing = multipleCaptureKing(board, piece.player);
 
-           var kinging = kinging(board, piece.player);
+           // var kinging = kinging(board, piece.player);
 
 
            for(var i = 0; i< mandatoryCapture.length ; i++){
