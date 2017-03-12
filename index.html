@@ -1,75 +1,122 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
+<!--
+	Hyperspace by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
 <html>
-<head>
-	<title>Checkers!</title>
-	<!-- <script src="https://www.gstatic.com/firebasejs/3.7.1/firebase-database.js"></script> -->
-	<script src="https://www.gstatic.com/firebasejs/3.7.1/firebase.js"></script>
-	<script src="js/utils.js"></script>
-<script>
-  
-  var config = {
-    apiKey: "AIzaSyDMPRg760qLZsPv7vyXW41BXHSTffciP7k",
-    databaseURL: "https://cs-451.firebaseio.com",
-  };
-
-  // A sample checkers room
-  var sessionName = "test"
-  var App = firebase.initializeApp(config);
-  
-  var session = null
-  
-  console.log(App.name);  // "[DEFAULT]"
-  
-  var defaultDatabase = App.database();
-
-  // GET A reference to the firebase-checkers room
-  var sessionRef = firebase.database().ref('/sessions/'+sessionName);
-
-  sessionRef.on('value', function(snapshot) {
-  			session = snapshot.val()
-  			// Nothing exists
-			if (session == null){
-				console.log("first player")
-				data = initJson()
-				var updates = {};
-				updates['/sessions/'+sessionName] = data;
-				res = firebase.database().ref().update(updates);
-				console.log(res)
+	<head>
+		<title>CHECKERS - Drexel</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+		<script>
+			function checkReady()
+			{
+				var player = true;
+				if (player == false) {
+					document.getElementById("xyz").innerHTML = "Waiting.....";
+					document.getElementById("xyz").href = "#";
+				}
+				else {
+					document.getElementById("xyz").innerHTML = "Start";
+					document.getElementById("xyz").href = "#two";
+				}
 			}
-			// Player 1 has joined. Wait for player 2
-			else if (session.players.length ==1 && 
-				session.players[0] == getName()){
-				console.log("waiting for player 2")
-			}
-			// Both players are already in the room
-			else if (session.players.length >1){
-				console.log("REDIRECT TO GAME")
-			}
-			// Handle player 2 joining room. 
-			// When Player 1 is already in room
-			else{
-				// NOTE PLAYER 2 has firebase index == 1
-				// NOTE PLAYER 1 has firebase index == 0	
-				console.log("Player 2")			
-				// updates[] = ;
-				session.players.push(getName())
-				res = firebase.database()
-							.ref('/sessions/'+sessionName+"/players")
-							.set(session.players)
-			}
-	});
+		</script>
+	</head>
+	<body>
 
-  
+		<!-- Sidebar -->
+			<section id="sidebar">
+				<div class="inner">
+					<nav>
+						<ul>
+							<li><a href="#intro">Welcome</a></li>
+							<li><a href="#two">Getting Started</a></li>
+						</ul>
+					</nav>
+				</div>
+			</section>
 
-  function exit(){
-  	sessionRef.remove()
-  	// HANDLE just one player being present
-  	console.log("deleted")	
-  }
-</script>
+		<!-- Wrapper -->
+			<div id="wrapper">
 
-</head>
-<body onbeforeunload="exit()">
+				<!-- Intro -->
+					<section id="intro" class="wrapper style1 fullscreen fade-up">
+						<div class="inner">
+							<h1>CHECKERS - Drexel University</h1>
+							<p>Welcom to Chekers Online. <br/>Your session id : </a><br/>
+							You are Player : </a></p>
+							<ul class="actions">
+								<li><a href="javascript:checkReady()" id="xyz" class="button scrolly">Click When Ready</a></li>
+							</ul>
+						</div>
+					</section>
 
-</body>
+				<!-- Two -->
+					<section id="two" class="wrapper style3 fade-up">
+						<div class="inner">
+							<h2>What we do</h2>
+							<p>Phasellus convallis elit id ullamcorper pulvinar. Duis aliquam turpis mauris, eu ultricies erat malesuada quis. Aliquam dapibus, lacus eget hendrerit bibendum, urna est aliquam sem, sit amet imperdiet est velit quis lorem.</p>
+							<div class="features">
+								<section>
+									<span class="icon major fa-code"></span>
+									<h3>Lorem ipsum amet</h3>
+									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
+								</section>
+								<section>
+									<span class="icon major fa-lock"></span>
+									<h3>Aliquam sed nullam</h3>
+									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
+								</section>
+								<section>
+									<span class="icon major fa-cog"></span>
+									<h3>Sed erat ullam corper</h3>
+									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
+								</section>
+								<section>
+									<span class="icon major fa-desktop"></span>
+									<h3>Veroeros quis lorem</h3>
+									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
+								</section>
+								<section>
+									<span class="icon major fa-chain"></span>
+									<h3>Urna quis bibendum</h3>
+									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
+								</section>
+								<section>
+									<span class="icon major fa-diamond"></span>
+									<h3>Aliquam urna dapibus</h3>
+									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
+								</section>
+							</div>
+							<ul class="actions">
+								<li><a href="#" class="button">Learn more</a></li>
+							</ul>
+						</div>
+					</section>
+
+		<!-- Footer -->
+			<footer id="footer" class="wrapper style1-alt">
+				<div class="inner">
+					<ul class="menu">
+						<li>&copy; Untitled. All rights reserved.</li><li>Design:Kashyap, Zoltan, Paritosh, Alex, Husain </li>
+					</ul>
+				</div>
+			</footer>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+			<script src="assets/js/main.js"></script>
+
+	</body>
 </html>
