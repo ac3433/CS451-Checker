@@ -30,6 +30,7 @@ var FirebaseHandler = function (){
     // console.log("append move called")
     var updates = {};
     res = firebase.database().ref('/sessions/'+sessionName+'/moves/').set(moves);
+
   }
   this.updateCurrentPlayer= function(player){
     // console.log("append move called")
@@ -70,6 +71,8 @@ var start = function(data,fbaseHandler) {
           var piece = pieces[mv.pieceID];
           piece.move(tile)
         }
+        console.log(Board.board)
+
     }
   
   //distance formula
@@ -97,18 +100,30 @@ var start = function(data,fbaseHandler) {
     }
     //moves the piece
     this.move = function (tile) { 
+      //if piece reaches the end of the row on opposite side crown it a king (can move all directions)
+      if(!this.king && (this.position[0] == 0 || this.position[0] == 7 )) 
+        this.makeKing();
+
+      var temp = this.player
+      if (this.king) {
+        if (this.player == 1){
+          temp = 3
+        }else{
+          temp = 4
+        }
+      }
       this.element.removeClass('selected'); 
       //remove the mark from Board.board and put it in the new spot
       Board.board[this.position[0]][this.position[1]] = 0;
-      Board.board[tile.position[0]][tile.position[1]] = this.player;
+      Board.board[tile.position[0]][tile.position[1]] = temp;
       this.position = [tile.position[0], tile.position[1]];
       //change the css using board's dictionary
       this.element.css('top', Board.dictionary[this.position[0]]);
       this.element.css('left', Board.dictionary[this.position[1]]);
-      //if piece reaches the end of the row on opposite side crown it a king (can move all directions)
       if(!this.king && (this.position[0] == 0 || this.position[0] == 7 )) 
         this.makeKing();
       return true;
+
     };
     
     
@@ -227,7 +242,11 @@ var selected
      
       //check if the tile is in range from the object
       var inRange = tile.inRange(piece);
-     
+      
+      var validation = validateMovement(piece,tile.position,Board.board)
+      console.log(tile.position)
+      console.log(validation)
+
       moveData = {"tileID":tileID,"pieceID":pieceID}
       piece.move(tile);
       moves.push(moveData)

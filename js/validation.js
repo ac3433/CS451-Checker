@@ -596,6 +596,8 @@
     }
 
     function winCheckByCapture(board, playerTurn){
+        console.log("yolo" + playerTurn); 
+        
         var result = true;
         if(playerTurn == 2){
             for (var i = 7; i >= 0; i--) { //nested for loop to navigate to each box in a board
@@ -603,12 +605,16 @@
 
                 for (var j = 0; j < board.length; j++) {
                     var piece = board[i][j];
+                    //console.log(piece);
                     if(piece == 1){
+                        //console.log("set false");
                         result = false;
                         break;
                     }
                 }
-                break;
+                if(result == false){
+                    break;
+                }
             }
             if(result == true){
                 console.log("PlAYER 2 HAS WON THE GAME BY CAPTURING ALL OF PLAYER 1'S PIECES.")
@@ -622,12 +628,16 @@
 
                 for (var j = 0; j < board.length; j++) {
                     var piece = board[i][j];
+                    //console.log("entering second for loop ");
+                    //console.log("piece"+piece);
                     if(piece == 2){
                         result = false;
                         break;
                     }
                 }
-                break;
+                if(result == false){
+                    break;
+                }
             }
             if(result == true){
                 console.log("PlAYER 1 HAS WON THE GAME BY CAPTURING ALL OF PLAYER 2'S PIECES.")
@@ -641,10 +651,15 @@
        var yAxis = move[1];
        var validate = true;
        var reason;
+       var returnArray = [];
 
        if(board[xAxis][yAxis] == -1){  // make sure the non white spaces are -1 .
-           console.log("You can only move diagonally")
-           return false;
+           console.log("You can only move diagonally");
+           validate = false;
+           reason = "You can only move diagonally";
+           returnArray.push(validate);
+           returnArray.push(reason);
+           return returnArray;
        }
 
        var wincapture = winCheckByCapture(board, piece.player);
@@ -653,28 +668,30 @@
 
        var winKing = winningCheckforKings(board, piece.player);
 
-       var mandatoryCapture;
+       var mandatory;
        var multipleCapture;
 
        if (wincapture == false || (winblock == false && winKing == false)){
            if(piece.player == 1){
-               mandatoryCapture = mandatoryCapture(board, piece.player);
+               mandatory = mandatoryCapture(board, piece.player);
                multipleCapture = multipleCaptureForward(board, piece.player);
            }
            else{
-               mandatoryCapture = mandatoryCapturePlayer2(board, piece.player);
+               mandatory = mandatoryCapturePlayer2(board, piece.player);
                multipleCapture = multipleCaptureBackward(board, piece.player);
            }
 
-           var multipleCaptureKing = multipleCaptureKing(board, piece.player);
+           var multipleCaptureKingReturn = multipleCaptureKing(board, piece.player);
 
            // var kinging = kinging(board, piece.player);
 
 
-           for(var i = 0; i< mandatoryCapture.length ; i++){
+           for(var i = 0; i< mandatory.length ; i++){
                var temp = mandatoryCapture[i];
+               console.log("temp array " + temp);
                if(temp[0] ==  xAxis && temp[1] == yAxis){
                    validate = true;
+                   reason = "validated";
                    break;
                }
                else {
@@ -683,17 +700,30 @@
                }
            }
 
+           if(validate == false){
+                returnArray.push(validate);
+                returnArray.push(reason);
+                return returnArray;
+           }
+
            //check multiple capture
            if(xAxis == multipleCapture[0] && yAxis == multipleCapture[1]){
                validate = true;
+               reason = "validated";
            }
            else{
                validate = false;
                reason = "A multiple capture can be made";
            }
 
+           if(validate == false){
+                returnArray.push(validate);
+                returnArray.push(reason);
+                return returnArray;
+           }
+
            //check multiple capture for king
-           if(xAxis == multipleCaptureKing[0] && yAxis == multipleCaptureKing[1]){
+           if(xAxis == multipleCaptureKingReturn[0] && yAxis == multipleCaptureKingReturn[1]){
                validate = true;
            }
            else{
@@ -701,17 +731,19 @@
                reason = "A multiple capture can be made";
            }
 
-           var returnArray = [];
+           if(validate == false){
+                returnArray.push(validate);
+                returnArray.push(reason);
+                return returnArray;
+           }
+           else{
+                returnArray.push(validate);
+                returnArray.push(reason);
 
-           returnArray.push(validate);
-           returnArray.push(reason);
+                return returnArray;
 
-           return returnArray;
-
-
+           }
        }
-
-
     }
 
 // }
