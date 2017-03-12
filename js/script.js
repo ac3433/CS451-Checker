@@ -6,7 +6,7 @@ var FirebaseHandler = function (){
   };
 
   // A sample checkers room
-  this.sessionName = "test"
+  this.sessionName = "hello2"
   this.App = firebase.initializeApp(config);
   this.session = null
   console.log(App.name);  // "[DEFAULT]"
@@ -19,7 +19,6 @@ var FirebaseHandler = function (){
         this.session = snapshot.val()
         if (!init){
           start(this.session,this)
-          // console.log(start)
           init = true
         }else{
            main.update(session)
@@ -27,10 +26,13 @@ var FirebaseHandler = function (){
         console.log("got firebase update")
   });
   this.appendMove = function(moves){
-    console.log("append move called")
+    // console.log("append move called")
     var updates = {};
-    console.log(moves)
     res = firebase.database().ref('/sessions/'+sessionName+'/moves/').set(moves);
+  }
+  this.updateCurrentPlayer= function(player){
+    // console.log("append move called")
+    res = firebase.database().ref('/sessions/'+sessionName+'/currentPlayer/').set(player);
   }
 }
 
@@ -42,8 +44,19 @@ var start = function(data,fbaseHandler) {
   var tiles = []; 
   var moves = []
   fbaseHandler.main = this
-  var currentPlayer = data.currentPlayer
+  this.session = data
+  var Player = 0
+
+  if (getName() == data.players[0]){
+     Player = 1
+     console.log("p" + Player)
+  }else{
+     Player = 2
+      console.log("p" + Player)
+  }
+
   this.update = function (session){
+        this.session = session
         var diff = moves.length - session.moves.length
         if (diff ==0){
           return
@@ -94,7 +107,6 @@ var start = function(data,fbaseHandler) {
       //if piece reaches the end of the row on opposite side crown it a king (can move all directions)
       if(!this.king && (this.position[0] == 0 || this.position[0] == 7 )) 
         this.makeKing();
-      // Board.changePlayerTurn();
       return true;
     };
     
@@ -181,8 +193,11 @@ var start = function(data,fbaseHandler) {
   
   //select the piece on click if it is the player's turn
   $('.piece').on("click", function () {
-    var selected;
-    var isPlayersTurn = true 
+  var isMyPiece = "player"+Player+"pieces"  == $(this).parent().attr("class").split(' ')[0] 
+  // console.log("is my piece " + isMyPiece)
+  // console.log("fbPlayer, current",session.currentPlayer,Player)
+  var isPlayersTurn = isMyPiece && session.currentPlayer == Player;
+var selected
     if(isPlayersTurn) {
       if($(this).hasClass('selected')) selected = true;
       $('.piece').each(function(index) {$('.piece').eq(index).removeClass('selected')});
@@ -216,9 +231,14 @@ var start = function(data,fbaseHandler) {
       piece.move(tile);
       moves.push(moveData)
       fbaseHandler.appendMove(moves)
-      console.log(moveData)
-      fbaseHandler.updatePlayer(moves)
-      
+      var temp = 0
+      // log.Println(this.session.currentPlayer)
+      if (session.currentPlayer == 2){
+        temp = 1
+      }else{
+        temp = 2  
+      }
+      fbaseHandler.updateCurrentPlayer(temp)
     }
   });
   

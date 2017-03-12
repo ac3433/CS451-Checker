@@ -22,7 +22,7 @@
 	  };
 
 	  // A sample checkers room
-	  var sessionName = "test"
+	  var sessionName = "hello2"
 	  var App = firebase.initializeApp(config);
 
 	  var session = null
@@ -33,13 +33,13 @@
 
 	  // GET A reference to the firebase-checkers room
 	  var sessionRef = firebase.database().ref('/sessions/'+sessionName);
-
 	  sessionRef.on('value', function(snapshot) {
 	  			session = snapshot.val()
 	  			// Nothing exists
 				if (session == null){
 					console.log("first player")
 					data = initJson()
+
 					var updates = {};
 					updates['/sessions/'+sessionName] = data;
 					res = firebase.database().ref().update(updates);
@@ -48,6 +48,7 @@
 				// Player 1 has joined. Wait for player 2
 				else if (session.players.length ==1 &&
 					session.players[0] == getName()){
+					
 					console.log("waiting for player 2")
 				}
 				// Both players are already in the room
