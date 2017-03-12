@@ -1,23 +1,62 @@
-var BoardHandler(){
-  playerIndex = 
+var init = false
+var FirebaseHandler = function (){
+  this.config = {
+    apiKey: "AIzaSyDMPRg760qLZsPv7vyXW41BXHSTffciP7k",
+    databaseURL: "https://cs-451.firebaseio.com",
+  };
+
+  // A sample checkers room
+  this.sessionName = "test"
+  this.App = firebase.initializeApp(config);
+  this.session = null
+  console.log(App.name);  // "[DEFAULT]"
+  this.defaultDatabase = App.database();
+
+  // GET A reference to the firebase-checkers room
+  var sessionRef = firebase.database().ref('/sessions/'+sessionName);
+  this.main = null
+  sessionRef.on('value', function(snapshot) {
+        this.session = snapshot.val()
+        if (!init){
+          start(this.session,this)
+          // console.log(start)
+          init = true
+        }else{
+           main.update(session)
+        }
+        console.log("got firebase update")
+  });
+  this.appendMove = function(moves){
+    console.log("append move called")
+    var updates = {};
+    console.log(moves)
+    res = firebase.database().ref('/sessions/'+sessionName+'/moves/').set(moves);
+  }
 }
 
-function start(data) {    
-  //The initial setup
-  
-  var gameBoard = [ 
-    [  0,  1,  0,  1,  0,  1,  0,  1 ],
-    [  1,  0,  1,  0,  1,  0,  1,  0 ],
-    [  0,  1,  0,  1,  0,  1,  0,  1 ],
-    [  0,  0,  0,  0,  0,  0,  0,  0 ],
-    [  0,  0,  0,  0,  0,  0,  0,  0 ],
-    [  2,  0,  2,  0,  2,  0,  2,  0 ],
-    [  0,  2,  0,  2,  0,  2,  0,  2 ],
-    [  2,  0,  2,  0,  2,  0,  2,  0 ]
-  ];
-  //arrays to store the instances
+FirebaseHandler()
+
+var start = function(data,fbaseHandler) { 
+
   var pieces = [];
   var tiles = []; 
+  var moves = []
+  fbaseHandler.main = this
+  var currentPlayer = data.currentPlayer
+  this.update = function (session){
+        var diff = moves.length - session.moves.length
+        if (diff ==0){
+          return
+        }
+        for (var i = moves.length ; i < session.moves.length; i++) {
+          console.log("Appending move")
+          var mv = session.moves[i]
+          moves.push(mv)
+          var tile = tiles[mv.tileID];
+          var piece = pieces[mv.pieceID];
+          piece.move(tile)
+        }
+    }
   
   //distance formula
   var dist = function (x1, y1, x2, y2) {
@@ -55,61 +94,12 @@ function start(data) {
       //if piece reaches the end of the row on opposite side crown it a king (can move all directions)
       if(!this.king && (this.position[0] == 0 || this.position[0] == 7 )) 
         this.makeKing();
-      Board.changePlayerTurn();
+      // Board.changePlayerTurn();
       return true;
     };
     
-    // //tests if piece can jump anywhere
-    // this.canJumpAny = function () {
-    //   if(this.canOpponentJump([this.position[0]+2, this.position[1]+2]) ||
-    //      this.canOpponentJump([this.position[0]+2, this.position[1]-2]) ||
-    //      this.canOpponentJump([this.position[0]-2, this.position[1]+2]) ||
-    //      this.canOpponentJump([this.position[0]-2, this.position[1]-2])) {
-    //     return true;
-    //   } return false;
-    // };
     
-    //tests if an opponent jump can be made to a specific place
-    // this.canOpponentJump = function(newPosition) {
-    //   //find what the displacement is
-    //   var dx = newPosition[1] - this.position[1];
-    //   var dy = newPosition[0] - this.position[0];
-    //   //make sure object doesn't go backwards if not a king
-    //   if(this.player == 1 && this.king == false) {
-    //     if(newPosition[0] < this.position[0]) return false;
-    //   } else if (this.player == 2 && this.king == false) {
-    //     if(newPosition[0] > this.position[0]) return false;
-    //   }
-    //   //must be in bounds
-    //   if(newPosition[0] > 7 || newPosition[1] > 7 || newPosition[0] < 0 || newPosition[1] < 0) return false;
-    //   //middle tile where the piece to be conquered sits
-    //   var tileToCheckx = this.position[1] + dx/2;
-    //   var tileToChecky = this.position[0] + dy/2;
-    //   //if there is a piece there and there is no piece in the space after that
-    //   if(!Board.isValidPlacetoMove(tileToChecky, tileToCheckx) && Board.isValidPlacetoMove(newPosition[0], newPosition[1])) {
-    //     //find which object instance is sitting there
-    //     for(pieceIndex in pieces) {
-    //       if(pieces[pieceIndex].position[0] == tileToChecky && pieces[pieceIndex].position[1] == tileToCheckx) {
-    //         if(this.player != pieces[pieceIndex].player) {
-    //           //return the piece sitting there
-    //           return pieces[pieceIndex];
-    //         }
-    //       }
-    //     }
-    //   }
-    //   return false;
-    // };
-    
-    // this.opponentJump = function (tile) {
-    //   var pieceToRemove = this.canOpponentJump(tile.position);
-    //   //if there is a piece to be removed, remove it
-    //   if(pieceToRemove) {
-    //     pieces[pieceIndex].remove();
-    //     return true;
-    //   }
-    //   return false;
-    // };
-    
+
     this.remove = function () {
       //remove it and delete it from the gameboard
       this.element.css("display", "none");
@@ -140,7 +130,7 @@ function start(data) {
   
   //Board object - controls logistics of game
   var Board = {
-    board: gameBoard,
+    board: data.board,
     playerTurn: 1,
     tilesElement: $('div.tiles'),
     //dictionary to convert position in Board.board to the viewport units
@@ -177,33 +167,13 @@ function start(data) {
         }
       }
     },
-    // //check if the location has an object
-    // isValidPlacetoMove: function (row, column) {
-    //   console.log(row); console.log(column); console.log(this.board);
-    //   if(this.board[row][column] == 0) {
-    //     return true;
-    //   } return false;
-    // },
-    //change the active player - also changes div.turn's CSS
-  //   changePlayerTurn: function () {
-  //     if(this.playerTurn == 1) {
-  //       this.playerTurn = 2;
-  //       $('.turn').css("background", "linear-gradient(to right, transparent 50%, #BEEE62 50%)");
-  //       return;
-  //     }
-  //     if(this.playerTurn == 2) {
-  //       this.playerTurn = 1;
-  //       $('.turn').css("background", "linear-gradient(to right, #BEEE62 50%, transparent 50%)");
-  //     }
-  //   },
-  //   //reset the game
-  //   clear: function () {
-  //     location.reload(); 
-  //   }
   }
   
   //initialize the board
   Board.initalize();
+  if (data.moves != null){
+    this.update(data);
+  }
   
   /***
   Events
@@ -212,8 +182,7 @@ function start(data) {
   //select the piece on click if it is the player's turn
   $('.piece').on("click", function () {
     var selected;
-    var isPlayersTurn = true
-    // ($(this).parent().attr("class").split(' ')[0] == "player"+Board.playerTurn+"pieces");
+    var isPlayersTurn = true 
     if(isPlayersTurn) {
       if($(this).hasClass('selected')) selected = true;
       $('.piece').each(function(index) {$('.piece').eq(index).removeClass('selected')});
@@ -235,30 +204,21 @@ function start(data) {
       //find the tile object being clicked
       var tileID = $(this).attr("id").replace(/tile/, '');
       var tile = tiles[tileID];
+
       //find the piece being selected
-      var piece = pieces[$('.selected').attr("id")];
+      var pieceID = $('.selected').attr("id")
+      var piece = pieces[pieceID];
+     
       //check if the tile is in range from the object
       var inRange = tile.inRange(piece);
+     
+      moveData = {"tileID":tileID,"pieceID":pieceID}
       piece.move(tile);
-      // if(inRange) {
-      //   //if the move needed is jump, then move it but also check if another move can be made (double and triple jumps)
-      //   if(inRange == 'jump') {
-      //     if(piece.opponentJump(tile)) {
-      //       piece.move(tile);
-      //       if(piece.canJumpAny()) {
-      //          Board.changePlayerTurn(); //change back to original since another turn can be made
-      //          piece.element.addClass('selected');
-      //       }
-      //     } 
-      //     //if it's regular then move it if no jumping is available
-      //   } else if(inRange == 'regular') {
-      //     if(!piece.canJumpAny()) {
-      //       piece.move(tile);
-      //     } else {
-      //       alert("You must jump when possible!");
-      //     }
-      //   }
-      // }
+      moves.push(moveData)
+      fbaseHandler.appendMove(moves)
+      console.log(moveData)
+      fbaseHandler.updatePlayer(moves)
+      
     }
   });
   
