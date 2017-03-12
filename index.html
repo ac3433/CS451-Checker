@@ -21,8 +21,13 @@
 	    databaseURL: "https://cs-451.firebaseio.com",
 	  };
 
+		function moveToGame(){
+			window.location()
+		}
+		function startWithSession(name){
 	  // A sample checkers room
-	  var sessionName = "hello2"
+
+	  var sessionName = name
 
 	  var App = firebase.initializeApp(config);
 
@@ -34,11 +39,15 @@
 
 	  // GET A reference to the firebase-checkers room
 	  var sessionRef = firebase.database().ref('/sessions/'+sessionName);
+
+		var thisplayer = 1
+
 	  sessionRef.on('value', function(snapshot) {
 	  			session = snapshot.val()
 	  			// Nothing exists
 				if (session == null){
 					console.log("first player")
+					thisplayer = 1;
 					data = initJson()
 
 					var updates = {};
@@ -49,12 +58,28 @@
 				// Player 1 has joined. Wait for player 2
 				else if (session.players.length ==1 &&
 					session.players[0] == getName()){
-					
+
 					console.log("waiting for player 2")
+					document.getElementById("pn").innerHTML = "Your are player " + thisplayer;
+					document.getElementById("xyz").innerHTML = "Waiting.....";
+					document.getElementById("xyz").href = "#";
 				}
 				// Both players are already in the room
 				else if (session.players.length >1){
 					console.log("REDIRECT TO GAME")
+					var temp = 0
+					if (session.players[0]==getName()){
+						temp = 1
+
+					}else{
+						temp = 2
+					}
+
+					document.getElementById("pn").innerHTML = "Your are player " + temp ;
+					document.getElementById("message").innerHTML = "Both Players have joined. "
+					document.getElementById("xyz").innerHTML = "Start Game";
+					document.getElementById("xyz").href = "./game.html?sessionid="+sessionName
+
 				}
 				// Handle player 2 joining room.
 				// When Player 1 is already in room
@@ -62,32 +87,41 @@
 					// NOTE PLAYER 2 has firebase index == 1
 					// NOTE PLAYER 1 has firebase index == 0
 					console.log("Player 2")
+					thisplayer = 2;
 					// updates[] = ;
 					session.players.push(getName())
 					res = firebase.database()
 								.ref('/sessions/'+sessionName+"/players")
 								.set(session.players)
+
 				}
 		});
 
-
+}
 
 	  function exit(){
-	  	sessionRef.remove()
+	  	// sessionRef.remove()
 	  	// HANDLE just one player being present
 	  	console.log("deleted")
 	  }
+
 			function checkReady()
 			{
-				var player = true;
-				if (player == false) {
-					document.getElementById("xyz").innerHTML = "Waiting.....";
-					document.getElementById("xyz").href = "#";
-				}
-				else {
-					document.getElementById("xyz").innerHTML = "Start";
-					document.getElementById("xyz").href = "#two";
-				}
+				// console.log()
+				// console.log("ASDASD")
+				startWithSession(document.getElementById("Sname").value)
+			// 	sessionName = document.getElementById("Sname").value;
+			// 	document.getElementById("sn").innerHTML = "Your session id : "+sessionName ;
+			// 	document.getElementById("pn").innerHTML = "You are Player : "+thisplayer ;
+			// 	var player = true;
+			// 	if (player == false) {
+			// 		document.getElementById("xyz").innerHTML = "Waiting.....";
+			// 		document.getElementById("xyz").href = "#";
+			// 	}
+			// 	else {
+			// 		document.getElementById("xyz").innerHTML = "Start";
+			// 		document.getElementById("xyz").href = "#two";
+			// 	}
 			}
 		</script>
 	</head>
@@ -112,11 +146,17 @@
 					<section id="intro" class="wrapper style1 fullscreen fade-up">
 						<div class="inner">
 							<h1>CHECKERS - Drexel University</h1>
-							<p>Welcom to Chekers Online. <br/>Your session id : </a><br/>
-							You are Player : </a></p>
-							<ul class="actions">
-								<li><a href="javascript:checkReady()" id="xyz" class="button scrolly">Click When Ready</a></li>
-							</ul>
+							<p>Welcom to Chekers Online. <br/>
+							<br>
+							</p>
+							<a id="pn"></a>
+							<p id="message"></p>
+							<form action="/action_page.php">
+  							<input type="text" name="Sname" id="Sname" value="" placeholder="Session Name" />
+								<ul class="actions">
+									<li><a  href="javascript:checkReady()" id="xyz" class="button scrolly">Click When Ready</a></li>
+								</ul>
+							</form>
 						</div>
 					</section>
 
