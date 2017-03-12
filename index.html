@@ -13,7 +13,68 @@
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
 		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+		<script src="https://www.gstatic.com/firebasejs/3.7.1/firebase.js"></script>
+		<script src="js/utils.js"></script>
 		<script>
+		var config = {
+	    apiKey: "AIzaSyDMPRg760qLZsPv7vyXW41BXHSTffciP7k",
+	    databaseURL: "https://cs-451.firebaseio.com",
+	  };
+
+	  // A sample checkers room
+	  var sessionName = "test"
+	  var App = firebase.initializeApp(config);
+
+	  var session = null
+
+	  console.log(App.name);  // "[DEFAULT]"
+
+	  var defaultDatabase = App.database();
+
+	  // GET A reference to the firebase-checkers room
+	  var sessionRef = firebase.database().ref('/sessions/'+sessionName);
+
+	  sessionRef.on('value', function(snapshot) {
+	  			session = snapshot.val()
+	  			// Nothing exists
+				if (session == null){
+					console.log("first player")
+					data = initJson()
+					var updates = {};
+					updates['/sessions/'+sessionName] = data;
+					res = firebase.database().ref().update(updates);
+					console.log(res)
+				}
+				// Player 1 has joined. Wait for player 2
+				else if (session.players.length ==1 &&
+					session.players[0] == getName()){
+					console.log("waiting for player 2")
+				}
+				// Both players are already in the room
+				else if (session.players.length >1){
+					console.log("REDIRECT TO GAME")
+				}
+				// Handle player 2 joining room.
+				// When Player 1 is already in room
+				else{
+					// NOTE PLAYER 2 has firebase index == 1
+					// NOTE PLAYER 1 has firebase index == 0
+					console.log("Player 2")
+					// updates[] = ;
+					session.players.push(getName())
+					res = firebase.database()
+								.ref('/sessions/'+sessionName+"/players")
+								.set(session.players)
+				}
+		});
+
+
+
+	  function exit(){
+	  	sessionRef.remove()
+	  	// HANDLE just one player being present
+	  	console.log("deleted")
+	  }
 			function checkReady()
 			{
 				var player = true;
@@ -28,7 +89,7 @@
 			}
 		</script>
 	</head>
-	<body>
+	<body onbeforeunload="exit()">
 
 		<!-- Sidebar -->
 			<section id="sidebar">
