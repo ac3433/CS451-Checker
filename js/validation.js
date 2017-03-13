@@ -1,29 +1,7 @@
 /**
  * Created by zoltangercsak1 on 3/9/17.
  */
-// move validations
-// function test(){
-//     var gameBoard = [
-//         [  0,  1,  0,  1,  0,  1,  0,  1 ],
-//         [  1,  0,  1,  0,  1,  0,  1,  0 ],
-//         [  0,  1,  0,  1,  0,  1,  0,  1 ],
-//         [  0,  0,  0,  0,  0,  0,  0,  0 ],
-//         [  0,  0,  0,  0,  0,  0,  0,  0 ],
-//         [  2,  0,  2,  0,  2,  0,  2,  0 ],
-//         [  0,  2,  0,  2,  0,  2,  0,  2 ],
-//         [  2,  0,  2,  0,  2,  0,  2,  0 ]
-//     ];
-//
-//     for(i=0; i < gameBoard.length; i++)
-//     {
-//         var word = "";
-//         var k = gameBoard[i];
-//         for (j = 0; j < gameBoard.length; j++){
-//             word += (gameBoard[i][j] + " ");
-//         }
-//         console.log(word);
-//
-//     }
+
 /*
  * Created by kashyap1 on 3/12/17.
  */
@@ -998,16 +976,7 @@ function validateMovement(piece, move, board) {
         multipleCapture = multipleCaptureBackward(board, piece.player);
     }
     var corrLen = multipleCapture.length
-
-    // console.log([xAxis,yAxis])
-    console.log("asdasd")
-    console.log(multipleCapture[corrLen-2])
-    console.log(multipleCapture[corrLen-1])
-    console.log(xAxis);
-    console.log(yAxis);
     if (multipleCapture.length == 0) {
-
-
 
     } else if (xAxis == multipleCapture[corrLen - 2] && yAxis == multipleCapture[corrLen - 1]) {
         validate = true;
@@ -1020,11 +989,12 @@ function validateMovement(piece, move, board) {
     if (validate == true) {
         returnArray.push(validate);
         returnArray.push(reason);
+        returnArray.push({"multipleCapture":multipleCapture});
         return returnArray;
     }
     var multipleCaptureKingReturn = multipleCaptureKing(board, piece.player);
     var corrLen = multipleCapture.length
-    if (multipleCapture.length == 0) {
+    if (multipleCaptureKingReturn.length == 0) {
 
     }
     //check multiple capture for king
@@ -1038,6 +1008,7 @@ function validateMovement(piece, move, board) {
     if (validate == false) {
         returnArray.push(validate);
         returnArray.push(reason);
+        returnArray.push({"multipleCapture":multipleCaptureKingReturn});
         return returnArray;
     }
 
@@ -1058,6 +1029,10 @@ function validateMovement(piece, move, board) {
                 if (temp[0] == xAxis && temp[1] == yAxis) {
                     validate = true;
                     reason = "validated";
+                    returnArray.push(validate);
+                     returnArray.push(reason);
+                     returnArray.push({"mandatory":mandatory});
+                     return returnArray;
                     break;
                 } else {
                     validate = false;
@@ -1080,9 +1055,10 @@ function validateMovement(piece, move, board) {
         }
 
 
-        if (validate == true) {
+        if (validate) {
             returnArray.push(validate);
             returnArray.push(reason);
+            returnArray.push({"mandatory":multipleCaptureKingReturn});
             return returnArray;
         } else if (Math.abs(piece.position[0] - xAxis) > 1 ||
             Math.abs(piece.position[1] - yAxis) > 1

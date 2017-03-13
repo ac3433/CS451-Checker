@@ -38,6 +38,7 @@ var FirebaseHandler = function (){
         this.session = snapshot.val()
         if (!init){
           start(this.session,this)
+
           init = true
         }else{
            main.update(session)
@@ -73,6 +74,7 @@ var start = function(data,fbaseHandler) {
   }else{
      Player = 2
   }
+  updateDataInDisplay(Player,0,0)
 console.log("THIS IS PLAYER" + Player)
   this.update = function (session){
         this.session = session
@@ -156,7 +158,6 @@ console.log("THIS IS PLAYER" + Player)
       if(this.player == 1) $('#player2').append("<div class='capturedPiece'></div>");
       if(this.player == 2) $('#player1').append("<div class='capturedPiece'></div>");
       Board.board[this.position[0]][this.position[1]] = 0;
-      //reset position so it doesn't get picked up by the for loop in the canOpponentJump method
       this.position = [];
     }
   }
@@ -261,12 +262,13 @@ var selected
       var piece = pieces[pieceID];
      
       //check if the tile is in range from the object
-      var inRange = tile.inRange(piece);
+     
       
       var validation = validateMovement(piece,tile.position,Board.board)
 
       console.log(validation)
       if (!validation[0]){
+        toastr.error(validation[1])
         $('.piece').each(function(index) {$('.piece').eq(index).removeClass('selected')});
         return
       }
@@ -283,6 +285,9 @@ var selected
         temp = 2  
       }
       fbaseHandler.updateCurrentPlayer(temp)
+      updateDataInDisplay(temp,0,0)
+
+      console.log(inRange)
     }
   });
   
