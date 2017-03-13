@@ -215,6 +215,17 @@ console.log("THIS IS PLAYER" + Player)
             pieces[countPieces] = new Piece($("#"+countPieces), [parseInt(row), parseInt(column)]);
             countPieces += 1;
           }
+          // else if(this.board[row][column] == 3) {
+          //   $('.player2pieces').append("<div class='piece' id='"+countPieces+"' style='top:"+this.dictionary[row]+";left:"+this.dictionary[column]+";'></div>");
+          //   pieces[countPieces] = new Piece($("#"+countPieces), [parseInt(row), parseInt(column)]);
+          //   pieces[countPieces].makeKing()
+          //   countPieces += 1;
+          // }else if(this.board[row][column] == 4) {
+          //   $('.player2pieces').append("<div class='piece' id='"+countPieces+"' style='top:"+this.dictionary[row]+";left:"+this.dictionary[column]+";'></div>");
+          //   pieces[countPieces] = new Piece($("#"+countPieces), [parseInt(row), parseInt(column)]);
+          //   pieces[countPieces].makeKing()
+          //   countPieces += 1;
+          // }
         }
       }
     },

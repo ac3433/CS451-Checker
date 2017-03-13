@@ -53,7 +53,8 @@ function multipleCaptureBackward(board, playerTurn, direction){
 
                         var xAxis = i_ - 1;
                         var yAxis = j_ + 1;
-                        if (board[xAxis][yAxis] != playerTurn || board[xAxis][yAxis]==0) {
+                        if (board[xAxis][yAxis] != playerTurn && board[xAxis][yAxis]!=0) {
+                        	
                             if (board[xAxis - 1][yAxis + 1] == 0) {
                                 i_ = xAxis - 1;
                                 j_ = yAxis + 1;
@@ -81,10 +82,10 @@ function multipleCaptureBackward(board, playerTurn, direction){
                     while (i_ - 2 >= 0 && j_ + 2 < 8) {
                         var xAxis = i_ - 1;
                         var yAxis = j_ + 1;
-                        if (board[xAxis][yAxis] != playerTurn || board[xAxis][yAxis]==0) {
+                        if (board[xAxis][yAxis] != playerTurn && board[xAxis][yAxis]!=0) {
+
                             if (board[xAxis - 1][yAxis + 1] == 0) {
-                                //i+2;
-                                //j+2;
+                                
                                 i_ = xAxis - 1;
                                 j_ = yAxis + 1;
                                 keep = board[i_][j_];
@@ -136,7 +137,7 @@ function multipleCaptureBackward(board, playerTurn, direction){
                     while (i_ - 2 >= 0 && j_ - 2 >= 0) {
                         var xAxis = i_ - 1;
                         var yAxis = j_ - 1;
-                        if (board[xAxis][yAxis] != playerTurn || board[xAxis][yAxis]==0) {
+                        if (board[xAxis][yAxis] != playerTurn && board[xAxis][yAxis]!=0) {
                             if (board[xAxis - 1][yAxis - 1] == 0) {
                                 //i+2;
                                 //j+2;
@@ -166,7 +167,7 @@ function multipleCaptureBackward(board, playerTurn, direction){
                     while (i - 2 >= 0 && j - 2 >= 0) {
                         var xAxis = i_ - 1;
                         var yAxis = j_ - 1;
-                        if (board[xAxis][yAxis] != playerTurn || board[xAxis][yAxis]==0) {
+                        if (board[xAxis][yAxis] != playerTurn && board[xAxis][yAxis]!=0) {
                             if (board[xAxis - 1][yAxis - 1] == 0) {
                                 i_ = xAxis - 1;
                                 j_ = yAxis - 1;
@@ -196,177 +197,6 @@ function multipleCaptureBackward(board, playerTurn, direction){
     }
     return temp;
 }
-
-/*
-MANDATORY
-*/
-function mandatoryCaptureForward(board, playerTurn, direction){
-    var moves = [];
-
-    if(direction == "right"){
-        moves = [];
-
-        for (var i = 0; i < board.length; i++) {
-            var temp_board = board[i];
-
-            for (var j = 0; j < board.length; j++) {
-                var piece = board[i][j];
-                if (piece == playerTurn) {
-                    var temp = [];
-                    if (i + 2 < 8 && j + 2 < 8) {
-                        var xAxis = i + 1;
-                        var yAxis = j + 1;
-                        if (board[xAxis][yAxis] != playerTurn && board[xAxis][yAxis] != 0) {
-                            if (board[xAxis + 1][yAxis + 1] == 0) { // this is assuming the empty spaces are integers like 0
-                                temp.push(xAxis + 1);
-                                temp.push(yAxis + 1);
-                                moves.push(temp);
-                            }
-                        }
-                    }
-                } else if (piece == 3) {
-                    var temp = [];
-                    if (i + 2 < 8 && j + 2 < 8) {
-                        var xAxis = i + 1;
-                        var yAxis = j + 1;
-                        if (board[xAxis][yAxis] != playerTurn && board[xAxis][yAxis] != 0) {
-                            if (board[xAxis + 1][yAxis + 1] == 0) { // this is assuming the empty spaces are integers like 0
-                                temp.push(xAxis + 1);
-                                temp.push(yAxis + 1);
-                                moves.push(temp);
-                            }
-                        }
-                    }
-                }
-
-            }
-        }
-    }
-    else if(direction == "left"){
-       moves = [];
-        for (var i = 0; i < board.length; i++) {
-            var temp_board = board[i];
-
-            for (var j = 7; j >= 0; j--) {
-                var piece = board[i][j];
-                if (piece == playerTurn) {
-                    var temp = [];
-                    if (i + 2 < 8 && j - 2 >= 0) {
-                        var xAxis = i + 1;
-                        var yAxis = j - 1;
-                        if ((board[xAxis][yAxis]) != playerTurn && board[xAxis][yAxis] != 0) {
-
-                            if (board[xAxis + 1][yAxis - 1] == 0) { // this is assuming the empty spaces are integers like 0
-                                temp.push(xAxis + 1);
-                                temp.push(yAxis - 1);
-                                moves.push(temp);
-                            }
-                        }
-                    }
-                } else if (piece == 3) {
-                    var temp = [];
-                    if (i + 2 < 8 && j - 2 >= 0) {
-                        var xAxis = i + 1;
-                        var yAxis = j - 1;
-                        if ((board[xAxis][yAxis]) != playerTurn && board[xAxis][yAxis] != 0) {
-                            if (board[xAxis + 1][yAxis - 1] == 0) { // this is assuming the empty spaces are integers like 0
-                                temp.push(xAxis - 1);
-                                temp.push(yAxis - 1);
-                                moves.push(temp);
-                            }
-                        }
-                    }
-                }
-
-            }
-        }
-    }
-    return moves;
-
-}
-
-function mandatoryCaptureBackward(board, playerTurn, direction){
-    var moves = [];
-    if(direction == "right"){
-        for (var i = board.length - 1; i >= 0; i--) {
-            var temp_board = board[i];
-
-            for (var j = 0; j < board.length; j++) {
-                var piece = board[i][j];
-                if (piece == playerTurn) {
-                    var temp = [];
-                    if (i - 2 >= 0 && j + 2 < 8) {
-                        var xAxis = i - 1;
-                        var yAxis = j + 1;
-                        if (board[xAxis][yAxis] != playerTurn && board[xAxis][yAxis] != 0) {
-                            if (board[xAxis - 1][yAxis + 1] == 0) { // this is assuming the empty spaces are integers like 0
-                                temp.push(xAxis - 1);
-                                temp.push(yAxis + 1);
-                                moves.push(temp);
-                            }
-                        }
-                    }
-                } else if (piece == 4) {
-                    var temp = [];
-                    if (i - 2 >= 0 && j + 2 < 8) {
-                        var xAxis = i - 1;
-                        var yAxis = j + 1;
-                        if (board[xAxis][yAxis] != playerTurn && board[xAxis][yAxis] != 0) {
-                            if (board[xAxis - 1][yAxis + 1] == 0) { // this is assuming the empty spaces are integers like 0
-                                temp.push(xAxis - 1);
-                                temp.push(yAxis + 1);
-                                moves.push(temp);
-                            }
-                        }
-                    }
-                }
-
-
-            }
-        }
-    }
-    else if(direction == "left"){
-        for (var i = board.length - 1; i >= 0; i--) {
-            var temp_board = board[i];
-
-            for (var j = 7; j >= 0; j--) {
-                var piece = board[i][j];
-                if (piece == playerTurn) {
-                    var temp = [];
-                    if (i - 2 >= 0 && j - 2 >= 0) {
-                        var xAxis = i - 1;
-                        var yAxis = j - 1;
-                        if ((board[xAxis][yAxis]) != playerTurn && board[xAxis][yAxis] != 0) {
-                            if (board[xAxis - 1][yAxis - 1] == 0) { // this is assuming the empty spaces are integers like 0
-                                temp.push(xAxis - 1);
-                                temp.push(yAxis - 1);
-                                moves.push(temp);
-                            }
-                        }
-                    }
-                } else if (piece == 4) {
-                    var temp = [];
-                    if (i - 2 >= 0 && j - 2 >= 0) {
-                        var xAxis = i - 1;
-                        var yAxis = j - 1;
-                        if ((board[xAxis][yAxis]) != playerTurn && board[xAxis][yAxis] != 0) {
-                            if (board[xAxis - 1][yAxis - 1] == 0) { // this is assuming the empty spaces are integers like 0
-                                temp.push(xAxis - 1);
-                                temp.push(yAxis - 1);
-                                moves.push(temp);
-                            }
-                        }
-                    }
-                }
-
-
-            }
-        }
-    }
-    return moves;
-    
-}
-
 
 function multipleCaptureForward(board, playerTurn, direction){
     var temp = [];
@@ -544,6 +374,298 @@ function multipleCaptureForward(board, playerTurn, direction){
     return temp;
 }
 
+/*
+MANDATORY
+*/
+function mandatoryCaptureForward(board, playerTurn, direction){
+    var moves = [];
+
+    if(direction == "right"){
+        moves = [];
+
+        for (var i = 0; i < board.length; i++) {
+            var temp_board = board[i];
+
+            for (var j = 0; j < board.length; j++) {
+                var piece = board[i][j];
+                if (piece == playerTurn) {
+                    var temp = [];
+                    if (i + 2 < 8 && j + 2 < 8) {
+                        var xAxis = i + 1;
+                        var yAxis = j + 1;
+                        if (board[xAxis][yAxis] != playerTurn && board[xAxis][yAxis] != 0) {
+                            if (board[xAxis + 1][yAxis + 1] == 0) { // this is assuming the empty spaces are integers like 0
+                                temp.push(xAxis + 1);
+                                temp.push(yAxis + 1);
+                                moves.push(temp);
+                            }
+                        }
+                    }
+                } else if (piece == 4) {
+                    var temp = [];
+                    if (i + 2 < 8 && j + 2 < 8) {
+                        var xAxis = i + 1;
+                        var yAxis = j + 1;
+                        if (board[xAxis][yAxis] == 1  && board[xAxis][yAxis] != 0) {
+                            if (board[xAxis + 1][yAxis + 1] == 0) { // this is assuming the empty spaces are integers like 0
+                                temp.push(xAxis + 1);
+                                temp.push(yAxis + 1);
+                                moves.push(temp);
+                            }
+                        }
+                    }
+                }else if (piece == 3) {
+                    var temp = [];
+                    if (i + 2 < 8 && j + 2 < 8) {
+                        var xAxis = i + 1;
+                        var yAxis = j + 1;
+                        if (board[xAxis][yAxis] == 2  && board[xAxis][yAxis] != 0) {
+                            if (board[xAxis + 1][yAxis + 1] == 0) { // this is assuming the empty spaces are integers like 0
+                                temp.push(xAxis + 1);
+                                temp.push(yAxis + 1);
+                                moves.push(temp);
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+    else if(direction == "left"){
+       moves = [];
+        for (var i = 0; i < board.length; i++) {
+            var temp_board = board[i];
+
+            for (var j = 7; j >= 0; j--) {
+                var piece = board[i][j];
+                if (piece == playerTurn) {
+                    var temp = [];
+                    if (i + 2 < 8 && j - 2 >= 0) {
+                        var xAxis = i + 1;
+                        var yAxis = j - 1;
+                        if ((board[xAxis][yAxis]) != playerTurn && board[xAxis][yAxis] != 0) {
+
+                            if (board[xAxis + 1][yAxis - 1] == 0) { // this is assuming the empty spaces are integers like 0
+                                temp.push(xAxis + 1);
+                                temp.push(yAxis - 1);
+                                moves.push(temp);
+                            }
+                        }
+                    }
+                } else if (piece == 4 || piece == 3) {
+                    var temp = [];
+                    if (i + 2 < 8 && j - 2 >= 0) {
+                        var xAxis = i + 1;
+                        var yAxis = j - 1;
+                        if ((board[xAxis][yAxis]) != playerTurn && board[xAxis][yAxis] != 0) {
+                            if (board[xAxis + 1][yAxis - 1] == 0) { // this is assuming the empty spaces are integers like 0
+                                temp.push(xAxis - 1);
+                                temp.push(yAxis - 1);
+                                moves.push(temp);
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+    return moves;
+
+}
+
+// TODO:- Check that the right pice is being moved
+function mandatoryCaptureBackward(board, playerTurn, direction){
+    var moves = [];
+    // var returnP = []
+    if(direction == "right"){
+        for (var i = board.length - 1; i >= 0; i--) {
+            var temp_board = board[i];
+
+            for (var j = 0; j < board.length; j++) {
+                var piece = board[i][j];
+                if (piece == playerTurn) {
+                    var temp = [];
+                    if (i - 2 >= 0 && j + 2 < 8) {
+                        var xAxis = i - 1;
+                        var yAxis = j + 1;
+                        if (board[xAxis][yAxis] != playerTurn && board[xAxis][yAxis] != 0) {
+                            if (board[xAxis - 1][yAxis + 1] == 0) { // this is assuming the empty spaces are integers like 0
+                                temp.push(xAxis - 1);
+                                temp.push(yAxis + 1);
+                                moves.push(temp);
+                            }
+                        }
+                    }
+                } else if (piece == 4) {
+                    var temp = [];
+                    if (i - 2 >= 0 && j + 2 < 8) {
+                        var xAxis = i - 1;
+                        var yAxis = j + 1;
+                        if (board[xAxis][yAxis] == 1 && board[xAxis][yAxis] != 0) {
+                            if (board[xAxis - 1][yAxis + 1] == 0) { // this is assuming the empty spaces are integers like 0
+                                temp.push(xAxis - 1);
+                                temp.push(yAxis + 1);
+                                moves.push(temp);
+                            }
+                        }
+                    }
+                }else if (piece == 3) {
+                    var temp = [];
+                    if (i - 2 >= 0 && j + 2 < 8) {
+                        var xAxis = i - 1;
+                        var yAxis = j + 1;
+                        if (board[xAxis][yAxis] == 2 && board[xAxis][yAxis] != 0) {
+                            if (board[xAxis - 1][yAxis + 1] == 0) { // this is assuming the empty spaces are integers like 0
+                                temp.push(xAxis - 1);
+                                temp.push(yAxis + 1);
+                                moves.push(temp);
+                            }
+                        }
+                    }
+                }
+
+
+            }
+        }
+    }
+    else if(direction == "left"){
+        for (var i = board.length - 1; i >= 0; i--) {
+            var temp_board = board[i];
+
+            for (var j = 7; j >= 0; j--) {
+                var piece = board[i][j];
+                if (piece == playerTurn) {
+                    var temp = [];
+                    if (i - 2 >= 0 && j - 2 >= 0) {
+                        var xAxis = i - 1;
+                        var yAxis = j - 1;
+                        if ((board[xAxis][yAxis]) != playerTurn && board[xAxis][yAxis] != 0) {
+                            if (board[xAxis - 1][yAxis - 1] == 0) { // this is assuming the empty spaces are integers like 0
+                                temp.push(xAxis - 1);
+                                temp.push(yAxis - 1);
+                                moves.push(temp);
+                            }
+                        }
+                    }
+                } else if (piece == 4) {
+                    var temp = [];
+                    if (i - 2 >= 0 && j + 2 < 8) {
+                        var xAxis = i - 1;
+                        var yAxis = j + 1;
+                        if (board[xAxis][yAxis] == 1 && board[xAxis][yAxis] != 0) {
+                            if (board[xAxis - 1][yAxis + 1] == 0) { // this is assuming the empty spaces are integers like 0
+                                temp.push(xAxis - 1);
+                                temp.push(yAxis + 1);
+                                moves.push(temp);
+                            }
+                        }
+                    }
+                }else if (piece == 3) {
+                    var temp = [];
+                    if (i - 2 >= 0 && j + 2 < 8) {
+                        var xAxis = i - 1;
+                        var yAxis = j + 1;
+                        if (board[xAxis][yAxis] == 2 && board[xAxis][yAxis] != 0) {
+                            if (board[xAxis - 1][yAxis + 1] == 0) { // this is assuming the empty spaces are integers like 0
+                                temp.push(xAxis - 1);
+                                temp.push(yAxis + 1);
+                                moves.push(temp);
+                            }
+                        }
+                    }
+                }
+
+
+            }
+        }
+    }
+    return moves;
+}
+function mandatoryCaptureKing(board, playerturn) {
+    var moves = [];
+    var temp_b = [];
+    var temp_f = [];
+    var temp_br = []
+    var temp_fr = []
+    var temp_bl = []
+    var temp_fl = []
+    if (playerturn == 1) {
+        for (var i = 0; i < board.length; i++) {
+            var temp_board = board[i];
+
+            for (var j = 0; j < board.length; j++) {
+                var piece = board[i][j];
+                if (piece == 3) {
+                    temp_br = mandatoryCapture(board, playerturn, "right");
+                    temp_fr = mandatoryCaptureBackward(board, playerturn, "right");
+                    temp_bl = mandatoryCapture(board, playerturn, "left");
+                    temp_fl = mandatoryCaptureBackward(board, playerturn, "left");
+                }
+            }
+            for (var x = 0; x < temp_br.length; x++) {
+                moves.push(temp_br[x]);
+            }
+            for (var y = 0; y < temp_fr.length; y++) {
+                moves.push(temp_fr[y]);
+            }
+            for (var z = 0; z < temp_bl.length; z++) {
+                moves.push(temp_bl[z]);
+            }
+            for (var q = 0; q < temp_fl.length; q++) {
+                moves.push(temp_fl[q]);
+            }
+        }
+    } else if (playerturn == 2) {
+        for (var i = 7; i >= 0; i--) {
+            var temp_board = board[i];
+
+            for (var j = 0; j < board.length; j++) {
+                var piece = board[i][j];
+                if (piece == 4) {
+                    temp_br = mandatoryCapture(board, playerturn, "right");
+                    temp_fr = mandatoryCapturePlayer2(board, playerturn, "right");
+                    temp_bl = mandatoryCapture(board, playerturn, "left");
+                    temp_fl = mandatoryCapturePlayer2(board, playerturn, "left");
+                }
+            }
+            for (var x = 0; x < temp_br.length; x++) {
+                moves.push(temp_br[x]);
+            }
+            for (var y = 0; y < temp_fr.length; y++) {
+                moves.push(temp_fr[y]);
+            }
+            for (var z = 0; z < temp_bl.length; z++) {
+                moves.push(temp_bl[z]);
+            }
+            for (var q = 0; q < temp_fl.length; q++) {
+                moves.push(temp_fl[q]);
+            }
+        }
+    }
+
+    return moves;
+
+}
+
+
+
+function checkForKings(board){
+    for (var i = 0; i < board.length; i++) {
+        var temp_board = board[i];
+
+        for (var j = 0; j < board.length; j++) {
+            var piece = board[i][j];
+            if (piece == 3 || piece == 4) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+    }
+}
 //function forwards
 function forwardStraight(tile, board, piece){
     if(piece.player == 1){
@@ -584,6 +706,29 @@ function emptyBlock(board,tile){
     }
 
 }
+
+function multipleMoveDiagonally(piece, tile, playerTurn){
+    // returns true if the move is valid, false if the player tries to play a multidiagonal move
+    if(playerTurn == piece.player){
+        if ((tile.position[0]) - (piece.position[0]) > 1 || (tile.position[1]) - (piece.position[1]) > 1) {
+            return false;
+        }
+        else if((tile.position[0]) - (piece.position[0]) > 1 || (tile.position[1]) - (piece.position[1]) < 1){
+            return false;
+        }
+    }
+    else if(playerTurn == piece.player) {
+        if ((tile.position[0]) - (piece.position[0]) < 1 || (tile.position[1]) - (piece.position[1]) > 1) {
+            return false;
+        }
+        else if ((tile.position[0]) - (piece.position[0]) < 1 || (tile.position[1]) - (piece.position[1]) < 1){
+            return false;
+        }
+    }
+    else{
+        return true;
+    }
+} 
 
 
 function winCheckByCapture(board, playerTurn){
@@ -656,6 +801,7 @@ function validateMovement(board_p,piece,tile){
 
 	// MULTIPLE Capture
 	if (piece.player == 1 ){
+		board = deepCopy(board_p)
 		var mc_right = multipleCaptureForward(board, piece.player, "right")
 		var mc_left = multipleCaptureForward(board, piece.player, "left")
 		if(mc_right.length>0){
@@ -674,7 +820,7 @@ function validateMovement(board_p,piece,tile){
 			}
 		}
 	}else if(piece.player == 2 ){
-
+		board = deepCopy(board_p)
 		var mc_right = multipleCaptureBackward(board, piece.player, "right")
 		var mc_left = multipleCaptureBackward(board, piece.player, "left")
 		if(mc_right.length>0){
@@ -694,11 +840,15 @@ function validateMovement(board_p,piece,tile){
 		}
 
 	}
-
-	if (piece.player==1){
-		// MANDATORY CAPT
-		var mc_right = mandatoryCaptureForward(board, piece.player, "right")
-		var mc_left = mandatoryCaptureForward(board, piece.player, "left")
+	
+	if (piece.player==1 || piece.king){
+		board = deepCopy(board_p)
+		var playa = piece.player
+		if (piece.king){
+			playa = 3
+		}
+		var mc_right = mandatoryCaptureForward(board, playa, "right")
+		var mc_left = mandatoryCaptureForward(board, playa, "left")
 		if(mc_right.length>0){
 			for (var i =0;i<mc_right.length;i++){
 				var element = mc_right[i]
@@ -716,9 +866,14 @@ function validateMovement(board_p,piece,tile){
 			}
 			return returnObject(false,"mandatoryCapture should be made",[])
 		}
-	}else if (piece.player==2){
-		var mc_right = mandatoryCaptureBackward(board, piece.player, "right")
-		var mc_left = mandatoryCaptureBackward(board, piece.player, "left")
+	}else if (piece.player==2 || piece.king){
+		board = deepCopy(board_p)
+		var playa = piece.player
+		if (piece.king){
+			playa = 4
+		}
+		var mc_right = mandatoryCaptureBackward(board, playa, "right")
+		var mc_left = mandatoryCaptureBackward(board, playa, "left")
 		if(mc_right.length>0){
 			for (var i =0;i<mc_right.length;i++){
 				var element = mc_right[i]
@@ -737,7 +892,25 @@ function validateMovement(board_p,piece,tile){
 			return returnObject(false,"mandatoryCapture should be made",[])
 		}
 	}
+	board = deepCopy(board_p)
 
+	if (!multipleMoveDiagonally){
+		return returnObject(false,"Cant move more than one block",[])
+	}
+
+
+	// if (checkForKings(board)){
+	// 	var mc_right = mandatoryCaptureKing(board, piece.player)
+	// 	if(mc_right.length>0){
+	// 		for (var i =0;i<mc_right.length;i++){
+	// 			var element = mc_right[i]
+	// 			if ( element[0]==tile.position[0] && element[1]==tile.position[1] ){
+	// 				return returnObject(true,"",[])
+	// 			}
+	// 		}
+	// 		return returnObject(false,"mandatory King Capture should be made",[])
+	// 	}
+	// }
 	return returnObject(true,"",[])
 }
 
