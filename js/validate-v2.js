@@ -28,7 +28,8 @@ function backwardStraight(tile, board,piece){
     return false
 }
 
-function multipleCaptureBackward(board, playerTurn, direction){
+function multipleCaptureBackward(board_g, playerTurn, direction){
+	var board = deepCopy(board_g)
     var temp = []
     if(direction == "right"){
         var keep = 0;
@@ -198,7 +199,8 @@ function multipleCaptureBackward(board, playerTurn, direction){
     return temp;
 }
 
-function multipleCaptureForward(board, playerTurn, direction){
+function multipleCaptureForward(board_g, playerTurn, direction){
+	var board = deepCopy(board_g)
     var temp = [];
     if(direction == "right"){
         var keep = 0;
@@ -377,7 +379,9 @@ function multipleCaptureForward(board, playerTurn, direction){
 /*
 MANDATORY
 */
-function mandatoryCaptureForward(board, playerTurn, direction){
+function mandatoryCaptureForward(board_g, playerTurn, direction){
+	var board = deepCopy(board_g)
+
     var moves = [];
 
     if(direction == "right"){
@@ -491,7 +495,8 @@ function mandatoryCaptureForward(board, playerTurn, direction){
 }
 
 // TODO:- Check that the right pice is being moved
-function mandatoryCaptureBackward(board, playerTurn, direction){
+function mandatoryCaptureBackward(board_g, playerTurn, direction){
+	var board = deepCopy(board_g)
     var moves = [];
     // var returnP = []
     if(direction == "right"){
@@ -794,15 +799,14 @@ function winCheckByCapture(board, playerTurn){
 }
 var count = 0  
 function validateMovement(board_p,piece,tile){
+
 	board = deepCopy(board_p)
+	
 	count+=1
 	var returnObject = function(isValid,reason,removePices){
 		return {"isValid":isValid,"reason":reason,"removePices":removePices}
 	}
 	if (!emptyBlock(board,tile)){
-		console.log("printing tile")
-		console.log(board[tile.position[0]][tile.position[1]])
-		console.log(tile.position)
 		return returnObject(false,"Tile Not Empty",[])
 	}
 	if (backwardStraight(tile,board,piece)){
@@ -815,11 +819,15 @@ function validateMovement(board_p,piece,tile){
 		return returnObject(false,"forward fails",[])
 	}
 
+	var playa = piece.player
+		if (piece.king){
+			playa = 3
+		}
 	// MULTIPLE Capture
-	if (piece.player == 1 ){
+	if (piece.player == 1 || piece.king ){
 		board = deepCopy(board_p)
-		var mc_right = multipleCaptureForward(board, piece.player, "right")
-		var mc_left = multipleCaptureForward(board, piece.player, "left")
+		var mc_right = multipleCaptureForward(board, playa, "right")
+		var mc_left = multipleCaptureForward(board, playa, "left")
 		console.log(mc_right)
 		console.log("ml_right")
 		console.log(mc_left)
@@ -839,10 +847,10 @@ function validateMovement(board_p,piece,tile){
 				return returnObject(false,"multipleCapture should be made",[])
 			}
 		}
-	}else if(piece.player == 2 ){
+	}else if(piece.player == 2 || piece.king){
 		board = deepCopy(board_p)
-		var mc_right = multipleCaptureBackward(board, piece.player, "right")
-		var mc_left = multipleCaptureBackward(board, piece.player, "left")
+		var mc_right = multipleCaptureBackward(board, playa, "right")
+		var mc_left = multipleCaptureBackward(board, playa, "left")
 		console.log(mc_right)
 		console.log("ml_right")
 		console.log(mc_left)
