@@ -1,4 +1,22 @@
 var init = false
+
+function getParameterByName(name, url) {
+    if (!url) {
+      url = window.location.href;
+    }
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+var sessionName = getParameterByName("sessionid")
+if (sessionName == "" || sessionName==null){
+  window.location.replace("./index.html") ;
+  console.log("redirect")
+}
+
 var FirebaseHandler = function (){
   this.config = {
     apiKey: "AIzaSyDMPRg760qLZsPv7vyXW41BXHSTffciP7k",
@@ -7,7 +25,7 @@ var FirebaseHandler = function (){
 
   // A sample checkers room
 
-  this.sessionName = "hello2"
+  this.sessionName = sessionName
   this.App = firebase.initializeApp(config);
   this.session = null
   console.log(App.name);  // "[DEFAULT]"
@@ -51,12 +69,11 @@ var start = function(data,fbaseHandler) {
 
   if (getName() == data.players[0]){
      Player = 1
-     console.log("p" + Player)
+
   }else{
      Player = 2
-      console.log("p" + Player)
   }
-
+console.log("THIS IS PLAYER" + Player)
   this.update = function (session){
         this.session = session
         var diff = moves.length - session.moves.length
@@ -64,15 +81,12 @@ var start = function(data,fbaseHandler) {
           return
         }
         for (var i = moves.length ; i < session.moves.length; i++) {
-          console.log("Appending move")
           var mv = session.moves[i]
           moves.push(mv)
           var tile = tiles[mv.tileID];
           var piece = pieces[mv.pieceID];
           piece.move(tile)
         }
-        console.log(Board.board)
-
     }
   
   //distance formula
@@ -101,9 +115,7 @@ var start = function(data,fbaseHandler) {
     //moves the piece
     this.move = function (tile) { 
       //if piece reaches the end of the row on opposite side crown it a king (can move all directions)
-      if(!this.king && (this.position[0] == 0 || this.position[0] == 7 )) 
-        this.makeKing();
-
+      
       var temp = this.player
       if (this.king) {
         if (this.player == 1){
@@ -120,8 +132,18 @@ var start = function(data,fbaseHandler) {
       //change the css using board's dictionary
       this.element.css('top', Board.dictionary[this.position[0]]);
       this.element.css('left', Board.dictionary[this.position[1]]);
-      if(!this.king && (this.position[0] == 0 || this.position[0] == 7 )) 
+      if(!this.king && (this.position[0] == 0 || this.position[0] == 7 )) {
         this.makeKing();
+        if (this.king) {
+        if (this.player == 1){
+           temp = 3
+          }else{
+        temp = 4
+          }
+        }
+        Board.board[this.position[0]][this.position[1]] = temp;
+      }
+
       return true;
 
     };
@@ -210,8 +232,6 @@ var start = function(data,fbaseHandler) {
   //select the piece on click if it is the player's turn
   $('.piece').on("click", function () {
   var isMyPiece = "player"+Player+"pieces"  == $(this).parent().attr("class").split(' ')[0] 
-  // console.log("is my piece " + isMyPiece)
-  // console.log("fbPlayer, current",session.currentPlayer,Player)
   var isPlayersTurn = isMyPiece && session.currentPlayer == Player;
 var selected
     if(isPlayersTurn) {
@@ -244,10 +264,14 @@ var selected
       var inRange = tile.inRange(piece);
       
       var validation = validateMovement(piece,tile.position,Board.board)
-      console.log(tile.position)
-      console.log(validation)
 
+      console.log(validation)
+      if (!validation[0]){
+        $('.piece').each(function(index) {$('.piece').eq(index).removeClass('selected')});
+        return
+      }
       moveData = {"tileID":tileID,"pieceID":pieceID}
+      
       piece.move(tile);
       moves.push(moveData)
       fbaseHandler.appendMove(moves)
