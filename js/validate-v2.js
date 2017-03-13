@@ -453,14 +453,29 @@ function mandatoryCaptureForward(board, playerTurn, direction){
                             }
                         }
                     }
-                } else if (piece == 4 || piece == 3) {
+                } else if (piece == 4 ) {
                     var temp = [];
                     if (i + 2 < 8 && j - 2 >= 0) {
                         var xAxis = i + 1;
                         var yAxis = j - 1;
-                        if ((board[xAxis][yAxis]) != playerTurn && board[xAxis][yAxis] != 0) {
+                        if ((board[xAxis][yAxis]) == 1 && board[xAxis][yAxis] != 0) {
+
                             if (board[xAxis + 1][yAxis - 1] == 0) { // this is assuming the empty spaces are integers like 0
-                                temp.push(xAxis - 1);
+                                temp.push(xAxis + 1);
+                                temp.push(yAxis - 1);
+                                moves.push(temp);
+                            }
+                        }
+                    }
+                }else if (piece == 3 ) {
+                    var temp = [];
+                    if (i + 2 < 8 && j - 2 >= 0) {
+                        var xAxis = i + 1;
+                        var yAxis = j - 1;
+                        if ((board[xAxis][yAxis]) == 2 && board[xAxis][yAxis] != 0) {
+
+                            if (board[xAxis + 1][yAxis - 1] == 0) { // this is assuming the empty spaces are integers like 0
+                                temp.push(xAxis + 1);
                                 temp.push(yAxis - 1);
                                 moves.push(temp);
                             }
@@ -551,26 +566,27 @@ function mandatoryCaptureBackward(board, playerTurn, direction){
                     }
                 } else if (piece == 4) {
                     var temp = [];
-                    if (i - 2 >= 0 && j + 2 < 8) {
+                    if (i - 2 >= 0 && j - 2 >= 0) {
                         var xAxis = i - 1;
-                        var yAxis = j + 1;
-                        if (board[xAxis][yAxis] == 1 && board[xAxis][yAxis] != 0) {
-                            if (board[xAxis - 1][yAxis + 1] == 0) { // this is assuming the empty spaces are integers like 0
+                        var yAxis = j - 1;
+                        if ((board[xAxis][yAxis]) == 1 && board[xAxis][yAxis] != 0) {
+                            if (board[xAxis - 1][yAxis - 1] == 0) { // this is assuming the empty spaces are integers like 0
                                 temp.push(xAxis - 1);
-                                temp.push(yAxis + 1);
+                                temp.push(yAxis - 1);
                                 moves.push(temp);
                             }
                         }
                     }
                 }else if (piece == 3) {
+                	console.log("final check")
                     var temp = [];
-                    if (i - 2 >= 0 && j + 2 < 8) {
+                    if (i - 2 >= 0 && j - 2 >= 0) {
                         var xAxis = i - 1;
-                        var yAxis = j + 1;
-                        if (board[xAxis][yAxis] == 2 && board[xAxis][yAxis] != 0) {
-                            if (board[xAxis - 1][yAxis + 1] == 0) { // this is assuming the empty spaces are integers like 0
+                        var yAxis = j - 1;
+                        if ((board[xAxis][yAxis]) == 2 && board[xAxis][yAxis] != 0) {
+                            if (board[xAxis - 1][yAxis - 1] == 0) { // this is assuming the empty spaces are integers like 0
                                 temp.push(xAxis - 1);
-                                temp.push(yAxis + 1);
+                                temp.push(yAxis - 1);
                                 moves.push(temp);
                             }
                         }
@@ -804,6 +820,10 @@ function validateMovement(board_p,piece,tile){
 		board = deepCopy(board_p)
 		var mc_right = multipleCaptureForward(board, piece.player, "right")
 		var mc_left = multipleCaptureForward(board, piece.player, "left")
+		console.log(mc_right)
+		console.log("ml_right")
+		console.log(mc_left)
+		console.log("ml_left")
 		if(mc_right.length>0){
 			if ((mc_right[mc_right.length-1]==tile.position[1])
 				&& (mc_right[mc_right.length-2]==tile.position[0])){
@@ -823,6 +843,10 @@ function validateMovement(board_p,piece,tile){
 		board = deepCopy(board_p)
 		var mc_right = multipleCaptureBackward(board, piece.player, "right")
 		var mc_left = multipleCaptureBackward(board, piece.player, "left")
+		console.log(mc_right)
+		console.log("ml_right")
+		console.log(mc_left)
+		console.log("ml_left")
 		if(mc_right.length>0){
 			if ((mc_right[mc_right.length-1]==tile.position[1])
 				&& (mc_right[mc_right.length-2]==tile.position[0])){
@@ -849,6 +873,10 @@ function validateMovement(board_p,piece,tile){
 		}
 		var mc_right = mandatoryCaptureForward(board, playa, "right")
 		var mc_left = mandatoryCaptureForward(board, playa, "left")
+		console.log(mc_right)
+		console.log("mc_right")
+		console.log(mc_left)
+		console.log("mc_left")
 		if(mc_right.length>0){
 			for (var i =0;i<mc_right.length;i++){
 				var element = mc_right[i]
@@ -874,6 +902,10 @@ function validateMovement(board_p,piece,tile){
 		}
 		var mc_right = mandatoryCaptureBackward(board, playa, "right")
 		var mc_left = mandatoryCaptureBackward(board, playa, "left")
+		console.log(mc_right)
+		console.log("mc_right")
+		console.log(mc_left)
+		console.log("mc_left")
 		if(mc_right.length>0){
 			for (var i =0;i<mc_right.length;i++){
 				var element = mc_right[i]
