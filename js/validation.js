@@ -352,6 +352,8 @@ function multipleCaptureForward(board, playerTurn) {
         }
     }
 
+console.log("Forward");
+    console.log(temp);
     return temp
 
 }
@@ -517,6 +519,9 @@ function multipleCaptureBackward(board, playerTurn) {
             }
         }
     }
+    console.log("Backward");
+
+    console.log(temp);
     return temp
 }
 
@@ -995,9 +1000,14 @@ function validateMovement(piece, move, board) {
     var corrLen = multipleCapture.length
 
     // console.log([xAxis,yAxis])
-    // console.log("asdasd")
-    // console.log(multipleCapture[corrLen-2])
+    console.log("asdasd")
+    console.log(multipleCapture[corrLen-2])
+    console.log(multipleCapture[corrLen-1])
+    console.log(xAxis);
+    console.log(yAxis);
     if (multipleCapture.length == 0) {
+
+
 
     } else if (xAxis == multipleCapture[corrLen - 2] && yAxis == multipleCapture[corrLen - 1]) {
         validate = true;
@@ -1007,7 +1017,7 @@ function validateMovement(piece, move, board) {
         reason = "A multiple capture can be made";
     }
     // console.log(multipleCapture)
-    if (validate == false) {
+    if (validate == true) {
         returnArray.push(validate);
         returnArray.push(reason);
         return returnArray;
@@ -1090,5 +1100,3 @@ function validateMovement(piece, move, board) {
         return returnArray;
 
     }
-
-    \
