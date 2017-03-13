@@ -248,7 +248,7 @@ var selected
   $('#cleargame').on("click", function () {
     Board.clear();
   });
-  
+  var temp1 = null
   //move piece when tile is clicked
   $('.tile').on("click", function () {
     //make sure a piece is selected
@@ -262,18 +262,16 @@ var selected
       var piece = pieces[pieceID];
      
       //check if the tile is in range from the object
-     
       
-      var validation = validateMovement(piece,tile.position,Board.board)
-
+      var validation = validateMovement(Board.board,piece,tile)
       console.log(validation)
-      if (!validation[0]){
-        toastr.error(validation[1])
+      if (!validation.isValid){
+        toastr.error(validation.reason)
         $('.piece').each(function(index) {$('.piece').eq(index).removeClass('selected')});
         return
       }
       moveData = {"tileID":tileID,"pieceID":pieceID}
-      
+     
       piece.move(tile);
       moves.push(moveData)
       fbaseHandler.appendMove(moves)
@@ -286,8 +284,6 @@ var selected
       }
       fbaseHandler.updateCurrentPlayer(temp)
       updateDataInDisplay(temp,0,0)
-
-      console.log(inRange)
     }
   });
   
