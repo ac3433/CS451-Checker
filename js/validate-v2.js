@@ -29,8 +29,10 @@ function backwardStraight(tile, board,piece){
 }
 
 function multipleCaptureBackward(board_g, playerTurn, direction){
+
 	var board = deepCopy(board_g)
     var temp = []
+    board = deepCopy(board_g)
     if(direction == "right"){
         var keep = 0;
         temp = []
@@ -83,7 +85,38 @@ function multipleCaptureBackward(board_g, playerTurn, direction){
                     while (i_ - 2 >= 0 && j_ + 2 < 8) {
                         var xAxis = i_ - 1;
                         var yAxis = j_ + 1;
-                        if (board[xAxis][yAxis] != playerTurn && board[xAxis][yAxis]!=0) {
+                        if (board[xAxis][yAxis] == 2 && board[xAxis][yAxis]!=0) {
+
+                            if (board[xAxis - 1][yAxis + 1] == 0) {
+                                
+                                i_ = xAxis - 1;
+                                j_ = yAxis + 1;
+                                keep = board[i_][j_];
+                                board[i_][j_] = piece;
+                                temp.push(i_);
+                                temp.push(j_);
+
+                            } else {
+                                board[i_][j_] = keep;
+                                break;
+                            }
+                        } else {
+                            break;
+                        }
+                    }
+                    if (temp.length > 2) {
+                        // moves.push(temp);
+                        break;
+                    } // see if the checker piece is one of the player. Note: check for empty space
+
+                }else if (piece == 4) {
+                    var temp = [];
+                    var i_ = i
+                    var j_ = j
+                    while (i_ - 2 >= 0 && j_ + 2 < 8) {
+                        var xAxis = i_ - 1;
+                        var yAxis = j_ + 1;
+                        if (board[xAxis][yAxis] == 1 && board[xAxis][yAxis]!=0) {
 
                             if (board[xAxis - 1][yAxis + 1] == 0) {
                                 
@@ -168,7 +201,36 @@ function multipleCaptureBackward(board_g, playerTurn, direction){
                     while (i - 2 >= 0 && j - 2 >= 0) {
                         var xAxis = i_ - 1;
                         var yAxis = j_ - 1;
-                        if (board[xAxis][yAxis] != playerTurn && board[xAxis][yAxis]!=0) {
+                        if (board[xAxis][yAxis] == 1 && board[xAxis][yAxis]!=0) {
+                            if (board[xAxis - 1][yAxis - 1] == 0) {
+                                i_ = xAxis - 1;
+                                j_ = yAxis - 1;
+                                keep = board[i_][j_];
+                                board[i_][j_] = piece;
+                                temp.push(i_);
+                                temp.push(j_);
+                            } else {
+                                board[i_][j_] = keep;
+                                break;
+                            }
+                        } else {
+                            break
+                        }
+                    }
+                    if (temp.length > 2) {
+                        // moves.push(temp);
+                        break;
+                    } // see if the checker piece is one of the player. Note: check for empty space
+
+                }else if (piece == 3) {
+                    var i_ = i
+                    var j_ = j
+                    var temp = [];
+
+                    while (i - 2 >= 0 && j - 2 >= 0) {
+                        var xAxis = i_ - 1;
+                        var yAxis = j_ - 1;
+                        if (board[xAxis][yAxis] == 2 && board[xAxis][yAxis]!=0) {
                             if (board[xAxis - 1][yAxis - 1] == 0) {
                                 i_ = xAxis - 1;
                                 j_ = yAxis - 1;
@@ -200,6 +262,7 @@ function multipleCaptureBackward(board_g, playerTurn, direction){
 }
 
 function multipleCaptureForward(board_g, playerTurn, direction){
+
 	var board = deepCopy(board_g)
     var temp = [];
     if(direction == "right"){
@@ -255,7 +318,38 @@ function multipleCaptureForward(board_g, playerTurn, direction){
                     while (i_ + 2 < 8 && j_ + 2 < 8) {
                         var xAxis = i_ + 1;
                         var yAxis = j_ + 1;
-                        if (board[xAxis][yAxis] != playerTurn && board[xAxis][yAxis] !=0 ) {
+                        if (board[xAxis][yAxis] == 2 && board[xAxis][yAxis] !=0 ) {
+                            if (board[xAxis + 1][yAxis + 1] == 0) {
+                                //i+2;
+                                //j+2;
+                                i_ = xAxis + 1;
+                                j_ = yAxis + 1;
+                                keep = board[i_][j_];
+                                board[i_][j_] = piece;
+                                temp.push(i_);
+                                temp.push(j_);
+
+                            } else {
+                                board[i_][j_] = keep;
+                                break;
+                            }
+                        } else {
+                            break;
+                        }
+                    }
+                    if (temp.length > 2) {
+                        // moves.push(temp);
+                        break;
+                    } // see if the checker piece is one of the player. Note: check for empty space
+
+                }else if (piece == 4) {
+                    var temp = [];
+                    var i_ = i
+                    var j_ = j
+                    while (i_ + 2 < 8 && j_ + 2 < 8) {
+                        var xAxis = i_ + 1;
+                        var yAxis = j_ + 1;
+                        if (board[xAxis][yAxis] == 1 && board[xAxis][yAxis] !=0 ) {
                             if (board[xAxis + 1][yAxis + 1] == 0) {
                                 //i+2;
                                 //j+2;
@@ -341,7 +435,36 @@ function multipleCaptureForward(board_g, playerTurn, direction){
                     while (i + 2 < 8 && j - 2 >= 0) {
                         var xAxis = i_ + 1;
                         var yAxis = j_ - 1;
-                        if (board[xAxis][yAxis] != playerTurn && board[xAxis][yAxis] !=0 ) {
+                        if (board[xAxis][yAxis] == 2 && board[xAxis][yAxis] !=0 ) {
+                            if (board[xAxis + 1][yAxis - 1] == 0) {
+                                i_ = xAxis + 1;
+                                j_ = yAxis - 1;
+                                keep = board[i_][j_];
+                                board[i_][j_] = piece;
+                                temp.push(i_);
+                                temp.push(j_);
+                            } else {
+                                board[i_][j_] = keep;
+                                break;
+                            }
+                        } else {
+                            break
+                        }
+                    }
+                    if (temp.length > 2) {
+                        // moves.push(temp);
+                        break;
+                    } // see if the checker piece is one of the player. Note: check for empty space
+
+                }else if (piece == 4) {
+                    var i_ = i
+                    var j_ = j
+                    var temp = [];
+
+                    while (i + 2 < 8 && j - 2 >= 0) {
+                        var xAxis = i_ + 1;
+                        var yAxis = j_ - 1;
+                        if (board[xAxis][yAxis] == 1 && board[xAxis][yAxis] !=0 ) {
                             if (board[xAxis + 1][yAxis - 1] == 0) {
                                 i_ = xAxis + 1;
                                 j_ = yAxis - 1;
@@ -363,6 +486,7 @@ function multipleCaptureForward(board_g, playerTurn, direction){
                     } // see if the checker piece is one of the player. Note: check for empty space
 
                 }
+
                 if (temp.length > 2) {
 
                     break;
@@ -375,6 +499,7 @@ function multipleCaptureForward(board_g, playerTurn, direction){
     }
     return temp;
 }
+
 
 /*
 MANDATORY
@@ -820,9 +945,14 @@ function validateMovement(board_p,piece,tile){
 	}
 
 	var playa = piece.player
-		if (piece.king){
-			playa = 3
-		}
+	if (piece.king && piece.player==1){
+		playa = 3
+	}else if(piece.king){
+		playa = 4
+	}
+
+	console.log("PIECE")
+	console.log(playa)
 	// MULTIPLE Capture
 	if (piece.player == 1 || piece.king ){
 		board = deepCopy(board_p)
