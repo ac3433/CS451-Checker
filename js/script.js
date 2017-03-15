@@ -87,7 +87,7 @@ console.log("THIS IS PLAYER" + Player)
           moves.push(mv)
           var tile = tiles[mv.tileID];
           var piece = pieces[mv.pieceID];
-          piece.move(tile)
+          piece.move(tile,mv.jump)
         }
     }
   
@@ -115,8 +115,9 @@ console.log("THIS IS PLAYER" + Player)
       this.king = true;
     }
     //moves the piece
-    this.move = function (tile) { 
+    this.move = function (tile,jmmmp) { 
       //if piece reaches the end of the row on opposite side crown it a king (can move all directions)
+     
       
       var temp = this.player
       if (this.king) {
@@ -130,6 +131,20 @@ console.log("THIS IS PLAYER" + Player)
       //remove the mark from Board.board and put it in the new spot
       Board.board[this.position[0]][this.position[1]] = 0;
       Board.board[tile.position[0]][tile.position[1]] = temp;
+     
+      if (jmmmp){
+        var p = getDiagonal(Board.board,this.position,tile.position)[0]
+        // console.log(pieces)
+        // console.log(p)
+        for (var i =0; i< pieces.length; i++) {
+          var pi = pieces[i]
+          if (pi.position[0] == p[0] && pi.position[1] == p[1]){
+            console.log("HERERERERER")
+            pi.remove()
+          }
+        }
+        // pieces[p[0]][p[1]].remove()
+      }
       this.position = [tile.position[0], tile.position[1]];
       //change the css using board's dictionary
       this.element.css('top', Board.dictionary[this.position[0]]);
@@ -146,9 +161,11 @@ console.log("THIS IS PLAYER" + Player)
         Board.board[this.position[0]][this.position[1]] = temp;
       }
 
+
       return true;
 
     };
+
     
     
 
@@ -168,11 +185,12 @@ console.log("THIS IS PLAYER" + Player)
     //position in gameboard
     this.position = position;
     //if tile is in range from the piece
-    this.inRange = function(piece) {
-      if(dist(this.position[0], this.position[1], piece.position[0], piece.position[1]) == Math.sqrt(2)) {
+    this.inRange = function(pos) {
+
+      if(dist(this.position[0], this.position[1], pos[0], pos[1]) == Math.sqrt(2)) {
         //regular move
         return 'regular';
-      } else if(dist(this.position[0], this.position[1], piece.position[0], piece.position[1]) == 2*Math.sqrt(2)) {
+      } else if(dist(this.position[0], this.position[1], pos[0], pos[1]) == 2*Math.sqrt(2)) {
         //jump move
         return 'jump';
       }
@@ -254,7 +272,7 @@ var selected
       }
     }
   });
-  
+
   //reset game when clear button is pressed
   $('#cleargame').on("click", function () {
     Board.clear();
@@ -274,28 +292,109 @@ var selected
      
       //check if the tile is in range from the object
       
-      var validation = validateMovement(Board.board,piece,tile)
-      console.log(validation)
-      if (!validation.isValid){
-        toastr.error(validation.reason)
-        $('.piece').each(function(index) {$('.piece').eq(index).removeClass('selected')});
-        return
+      // var validation = isValidMove(Board.board,piece,tile)
+      // // validateMovement(Board.board,piece,tile)
+      // console.log(validation)
+      // if (!validation.isValid){
+        
+      // }
+      
+      out = Board.board
+      
+      var reqD = {
+        "Board":boardToStr(Board.board),
+        "Tile":tile.position,
+        "Piece":piece.position,
+        "Player":piece.player%2
       }
-      moveData = {"tileID":tileID,"pieceID":pieceID}
-     
-      piece.move(tile);
-      moves.push(moveData)
-      fbaseHandler.appendMove(moves)
-      var temp = 0
-      // log.Println(this.session.currentPlayer)
-      if (session.currentPlayer == 2){
-        temp = 1
-      }else{
-        temp = 2  
-      }
-      fbaseHandler.updateCurrentPlayer(temp)
-      updateDataInDisplay(temp,0,0)
+      $.post( "http://50.116.48.10:8000/hello", JSON.stringify(reqD))
+      .done(function( data ) {
+        if (data=="true"){
+          var jump=false
+
+          console.log(tile.inRange(piece.position))
+          if (tile.inRange(piece.position)=="jump"){
+            jump=true
+          }
+          piece.move(tile,jump);
+
+          moveData = {"tileID":tileID,"pieceID":pieceID,"jump":jump}
+          moves.push(moveData)
+          fbaseHandler.appendMove(moves)
+          var temp = 0
+          if (session.currentPlayer == 2){
+            temp = 1
+          }else{
+            temp = 2  
+          }
+          fbaseHandler.updateCurrentPlayer(temp)
+          updateDataInDisplay(temp,0,0)
+
+        }else{
+          toastr.error("Incorrect Move")
+          $('.piece').each(function(index) {$('.piece').eq(index).removeClass('selected')});
+          return
+        }
+      });
+ 
     }
   });
-  
+}
+var out = []
+
+function boardToStr(board_g){
+  board = deepcopy(board_g)
+  var arr = "" 
+  for (var i = 0; i < board.length; i++) {
+   arr+= "|"
+    for (var j = 0; j < board[i].length; j++){
+      if (j!=0){
+        arr+=" "
+      }
+      if (board[i][j] == -1 || board[i][j] == 0)
+        arr +="-";
+      else if (board[i][j] == 2)
+        arr +="x";
+      else if (board[i][j] == 4)
+        arr +="X";
+      else if (board[i][j] == 1)
+        arr +="o";
+      else if (board[i][j] == 3)
+        arr +="O";
+      else
+        console.log("SSSSSSSSSSSSSSSSSs")
+      }
+  arr+="|"
+  }
+  return arr
+}
+
+function deepcopy(arr){
+  var a = []
+  for (var i = 0; i < arr.length; i++) {
+    temp = []
+    for (var j = 0; j < arr[i].length; j++) {
+      temp.push(arr[i][j])
+    }
+    a.push(temp)
+  }
+  return a
+}
+
+function getDiagonal(board,pt1,pt2){
+    var arr = []
+    x1 = pt1[0]
+    y1 = pt1[1]
+    x2 = pt2[0]
+    y2 = pt2[1]
+    var incx = 1
+    var incy = 1
+    if ((x2-x1)<0)
+        incx = -1;
+    if ((y2-y1)<0)
+        incy = -1;
+   for (var i = 1 ; i < Math.abs(x2-x1); i++) {
+       arr.push([x1+(incx*i),y1+(incy*i)])
+   }
+   return arr
 }
